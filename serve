@@ -1,0 +1,17 @@
+#!/bin/env node
+
+var common = require('./common'),
+    watch = require('metalsmith-watch'),
+    serve = require('metalsmith-serve');
+
+common
+  .use(watch({
+    livereload: true
+  }))
+  .use(serve({
+    port: 1313,
+    verbose: true
+  }))
+  .build(function(err){
+    if (err) throw err;
+  });

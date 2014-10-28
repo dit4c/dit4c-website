@@ -2,7 +2,9 @@
   "preferences": {
     "tabSize": 2,
     "gotoExclude": [
-      "*/public/*"
+      "/build/*",
+      "/images/*",
+      "/node_modules/*"
     ]
   }
 }

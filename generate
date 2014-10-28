@@ -1,0 +1,8 @@
+#!/bin/env node
+
+var common = require('./common');
+
+common
+  .build(function(err){
+    if (err) throw err;
+  });
