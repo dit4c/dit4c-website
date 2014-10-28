@@ -1,0 +1,8 @@
+{
+  "preferences": {
+    "tabSize": 2,
+    "gotoExclude": [
+      "*/public/*"
+    ]
+  }
+}
