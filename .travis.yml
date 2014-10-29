@@ -13,4 +13,4 @@ before_script:
 script:
 - ./generate
 after_success:
-- cd build && git add -A . && git ci -m "Travis CI build"
+- cd build && git add -A . && git commit -m "Travis CI build"
