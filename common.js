@@ -1,5 +1,6 @@
 /* global: module */
 var Metalsmith = require('metalsmith'),
+    less = require('metalsmith-less'),
     markdown = require('metalsmith-markdown'),
     permalinks = require('metalsmith-permalinks'),
     templates = require('metalsmith-templates');
@@ -11,7 +12,9 @@ var metadata = {
 
 module.exports =
   Metalsmith(__dirname)
+    .clean(true)
     .metadata(metadata)
+    .use(less())
     .use(markdown())
     .use(permalinks({
       "pattern": ":title"

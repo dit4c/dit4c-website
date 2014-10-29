@@ -1,6 +1,5 @@
 <html>
 <head>
-  <base href="{{ .Site.BaseUrl }}">
   <meta charset="utf-8">
   <title>{{title}}</title>
   <link rel="canonical" href="{{permalink}}"/>
@@ -21,22 +20,29 @@
 
   <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
   <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="/stylesheets/main.css" rel="stylesheet">
+  <link href='//fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
 
+  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
   <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 </head>
 <body>
   <div class="jumbotron">
     <div class="container">
-      <img class="img-responsive center-block" src="/images/DIT4C_logo.svg"/>
-      <div class="btn-toolbar center-block">
-        <a class="btn btn-default" href="https://github.com/dit4c/dit4c">
+      <img class="img-responsive center-block" src="/images/logo.png"/>
+      <p class="text-center">
+        <a class="btn btn-outline" href="https://github.com/dit4c/dit4c">
           <i class="fa fa-github"></i>
           GitHub
         </a>
-      </div>
+      </p>
     </div>
   </div>
-
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12">{{{contents}}}</div>
+    </div>
+  </div>
 
 </body>
 </html>
