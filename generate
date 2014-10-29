@@ -3,6 +3,7 @@
 var common = require('./common');
 
 common
+  .clean(false)
   .build(function(err){
     if (err) throw err;
   });
