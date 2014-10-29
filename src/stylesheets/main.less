@@ -1,11 +1,19 @@
 .jumbotron {
-  background: #8080FF;
+  @background: #8080FF;
+  background: @background;
 
   .btn-outline {
     color: white;
     background: transparent;
     border-color: white;
-    font-weight: bold;
+    font-weight: bolder;
+  }
+
+  .btn-outline:hover {
+    color: @background;
+    background: white;
+    border-color: white;
+    font-weight: bolder;
   }
 }
 
