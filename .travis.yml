@@ -1,6 +1,9 @@
 branches:
   only:
   - master
+before_install:
+- openssl aes-256-cbc -K $encrypted_9626480e6579_key -iv $encrypted_9626480e6579_iv
+  -in deploy.pem.enc -out .travis/deploy.pem -d
 before_script:
 - eval `ssh-agent -s`
 - chmod 600 .travis/deploy.pem
@@ -10,7 +13,4 @@ before_script:
 script:
 - ./generate
 after_success:
-- cd build && git add -A . && git ci -m "Travis CI build
-before_install:
-- openssl aes-256-cbc -K $encrypted_9626480e6579_key -iv $encrypted_9626480e6579_iv
-  -in deploy.pem.enc -out .travis/deploy.pem -d
+- cd build && git add -A . && git ci -m "Travis CI build"
