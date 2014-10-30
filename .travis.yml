@@ -15,9 +15,10 @@ script:
 after_success:
 - export GIT_AUTHOR_NAME=`git log -1 --format="format:%an"`
 - export GIT_AUTHOR_EMAIL=`git log -1 --format="format:%ae"`
+- export GIT_COMMIT_BODY=`git log -1 --format="format:%B"`
 - cd build
 - git config user.name "$GIT_AUTHOR_NAME"
 - git config user.email "$GIT_AUTHOR_EMAIL"
 - git add -A .
-- git commit -m "Travis CI build"
+- git commit -m "$GIT_COMMIT_BODY"
 - git push origin master
