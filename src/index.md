@@ -18,7 +18,7 @@ As long as your users have Internet access and a modern browser, they'll be able
 
 DIT4C has plenty of images to choose from:
 
- * [iPython Notebooks][dit4c-container-ipython]
+ * [IPython Notebook][dit4c-container-ipython]
  * [RStudio][dit4c-container-rstudio]
  * [IJulia][dit4c-container-ijulia]
  * [Octave][dit4c-container-octave]
