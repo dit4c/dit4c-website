@@ -4,6 +4,8 @@ template: index.html
 
 <abbr title="Data Intensive Tools for the Cloud">DIT4C</abbr> _(dit-for-see)_ is a platform for hosting data analysis tools "in the cloud" using Docker containers. Docker images provide the tools, and DIT4C provides a secure hosting platform for them.
 
+[See how DIT4C is being used for ResBaz 2015](resbaz.html)
+
 ---
 
 ### Host locally, run globally
