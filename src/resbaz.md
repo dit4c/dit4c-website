@@ -4,7 +4,7 @@ template: page.html
 permalink: false
 ---
 
-# DIT4C & ResBaz 2015
+# DIT4C & [ResBaz 2015][resbaz]
 
 Running training sessions for 200 researchers requires a fair amount of grunt, and a high degree of redundancy to cope with failures.
 
@@ -42,3 +42,4 @@ For compute nodes, producing a HA solution was deamed too problematic, as multi-
 [flannel]: https://github.com/coreos/flannel
 [hipache]: https://github.com/hipache/hipache
 [nectar-rc]: https://nectar.org.au/
+[resbaz]: http://resbaz.tumblr.com/conference
