@@ -30,7 +30,7 @@ A five node [etcd][etcd] cluster is capable of tolerating two lost nodes before 
 
 All five nodes were then deployed with routing containers, and three of the nodes with portal containers. A [cluster manager][cm] was used to monitor the portal containers and setup continuous replication between the three CouchDB instances.
 
-Round-robin DNS was used to spread requests between the five compute nodes. The [Hipache][hipache] proxies spread requests between the three portal nodes.
+Round-robin DNS was used to spread requests between the five compute nodes. The [dynamic reverse proxies][nginx-etcd-vhosts] spread requests between the three portal nodes and to the correct compute nodes for containers.
 
 ## High Availability
 
@@ -45,6 +45,6 @@ For compute nodes, producing a HA solution was deamed too problematic, as multi-
 [coreos]: https://coreos.com/
 [etcd]: https://github.com/coreos/etcd
 [flannel]: https://github.com/coreos/flannel
-[hipache]: https://github.com/hipache/hipache
+[nginx-etcd-vhosts]: https://github.com/dit4c/nginx-etcd-vhosts
 [nectar-rc]: https://nectar.org.au/
 [resbaz]: http://resbaz.tumblr.com/conference
