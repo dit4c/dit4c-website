@@ -15,7 +15,7 @@ Fortunately, DIT4C is designed to scale out.
  * 5 platform nodes across 5 data-centres, including:
    * 5 routing nodes
    * 3 portal nodes
- * 10-20 compute nodes
+ * 12 compute nodes across 3 data-centres
 
 ![DIT4C Architecture overview](https://github.com/dit4c/dit4c/raw/master/docs/architecture.png)
 
@@ -47,4 +47,4 @@ For compute nodes, producing a HA solution was deamed too problematic, as multi-
 [flannel]: https://github.com/coreos/flannel
 [nginx-etcd-vhosts]: https://github.com/dit4c/nginx-etcd-vhosts
 [nectar-rc]: https://nectar.org.au/
-[resbaz]: http://resbaz.tumblr.com/conference
+[resbaz]: http://melbourne.resbaz.edu.au/ResBaz2015
