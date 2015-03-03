@@ -3,7 +3,8 @@ var Metalsmith = require('metalsmith'),
     less = require('metalsmith-less'),
     markdown = require('metalsmith-markdown'),
     permalinks = require('metalsmith-permalinks'),
-    templates = require('metalsmith-templates');
+    templates = require('metalsmith-templates'),
+    wordcount = require('metalsmith-word-count');
 
 var metadata = {
   "title": "DIT4C",
@@ -21,4 +22,5 @@ module.exports =
     }))
     .use(templates({
       "engine": "hogan"
-    }));
+    }))
+    .use(wordcount());

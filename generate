@@ -1,9 +1,27 @@
 #!/usr/bin/env node
 
-var common = require('./common');
+var common = require('./common'),
+    table = require('text-table');
 
 common
   .clean(false)
-  .build(function(err){
+  .build(function(err, files) {
     if (err) throw err;
+    var rows =
+      Object.keys(files)
+        .filter(function(filename) { return files[filename].wordCount; })
+        .sort()
+        .map(function(filename) {
+          var metadata = files[filename];
+          return [
+            filename,
+            metadata.title || '',
+            metadata.wordCount,
+            metadata.readingTime
+          ];
+        }),
+      text = table(
+        [['File','Title','Word Count', 'Reading Time']].concat(rows),
+        { align: ['l', 'l', 'r', 'r'] } );
+    console.log(text);
   });
