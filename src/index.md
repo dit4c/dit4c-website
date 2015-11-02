@@ -22,8 +22,12 @@ DIT4C has plenty of images to choose from:
 
  * [IPython Notebook][dit4c-container-ipython]
  * [RStudio][dit4c-container-rstudio]
- * [IJulia][dit4c-container-ijulia]
- * [Octave][dit4c-container-octave]
+ * [Octave (GUI)][dit4c-container-octave]
+ * [Octave & Julia (Jupyter)][dit4c-container-jupyter]
+ * [OpenRefine][dit4c-container-openrefine]
+ * [Slicer][dit4c-container-slicer]
+ * [Blender][dit4c-container-blender]
+ * [Gephi][dit4c-container-gephi]
 
 If they're not an instant fit, that's OK. DIT4C can use any appropriate image from Docker Hub.
 
@@ -36,7 +40,7 @@ Extend one of the existing tool images.
 
 FROM dit4c/dit4c-container-ipython
 
-ADD yum install -y awesome-package-we-forgot
+ADD sudo yum install -y awesome-package-we-forgot
 
 ```
 
@@ -59,9 +63,13 @@ From bare metal to cloud VMs, DIT4C allows compute to be provided in whatever wa
 SSL for communication between the portal and individual compute nodes, providing end-to-end encryption.
 
 
-[dit4c-container-base]: https://registry.hub.docker.com/u/dit4c/dit4c-container-base/
-[dit4c-container-x11]: https://registry.hub.docker.com/u/dit4c/dit4c-container-x11/
-[dit4c-container-ipython]: https://registry.hub.docker.com/u/dit4c/dit4c-container-ipython/
-[dit4c-container-ijulia]: https://registry.hub.docker.com/u/dit4c/dit4c-container-ijulia/
-[dit4c-container-rstudio]: https://registry.hub.docker.com/u/dit4c/dit4c-container-rstudio/
-[dit4c-container-octave]: https://registry.hub.docker.com/u/dit4c/dit4c-container-octave/
+[dit4c-container-base]: https://hub.docker.com/r/dit4c/dit4c-container-base/
+[dit4c-container-blender]: https://hub.docker.com/r/dit4c/dit4c-container-blender/
+[dit4c-container-gephi]: https://hub.docker.com/r/dit4c/dit4c-container-gephi/
+[dit4c-container-ipython]: https://hub.docker.com/r/dit4c/dit4c-container-ipython/
+[dit4c-container-jupyter]: https://hub.docker.com/r/dit4c/dit4c-container-jupyter/
+[dit4c-container-octave]: https://hub.docker.com/r/dit4c/dit4c-container-octave/
+[dit4c-container-openrefine]: https://hub.docker.com/r/dit4c/dit4c-container-openrefine/
+[dit4c-container-rstudio]: https://hub.docker.com/r/dit4c/dit4c-container-rstudio/
+[dit4c-container-slicer]: https://hub.docker.com/r/dit4c/dit4c-container-slicer/
+[dit4c-container-x11]: https://hub.docker.com/r/dit4c/dit4c-container-x11/
