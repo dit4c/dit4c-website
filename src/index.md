@@ -1,5 +1,5 @@
 ---
-template: index.html
+layout: index.html
 ---
 
 <abbr title="Data Intensive Tools for the Cloud">DIT4C</abbr> _(dit-for-see)_ is a platform for hosting data analysis tools "in the cloud" using Docker containers. Docker images provide the tools, and DIT4C provides a secure hosting platform for them.
@@ -62,6 +62,14 @@ Compute nodes are spun up by their owners and registered with the portal. Comput
 From bare metal to cloud VMs, DIT4C allows compute to be provided in whatever way makes sense for the users. For the security-conscious, DIT4C can even use
 SSL for communication between the portal and individual compute nodes, providing end-to-end encryption.
 
+---
+
+### Release Signing Key
+
+```
+include release-signing-key.asc
+```
+[Download release-signing-key.asc](./release-signing-key.asc)
 
 [dit4c-container-base]: https://hub.docker.com/r/dit4c/dit4c-container-base/
 [dit4c-container-blender]: https://hub.docker.com/r/dit4c/dit4c-container-blender/

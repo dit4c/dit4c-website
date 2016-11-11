@@ -4,11 +4,13 @@
   "dependencies": {
     "hogan.js": "^3.0.2",
     "metalsmith": "^1.0.1",
-    "metalsmith-dev": "0.0.1",
+    "metalsmith-include-content": "^1.0.1",
+    "metalsmith-layouts": "^1.7.0",
     "metalsmith-less": "^1.0.1",
     "metalsmith-markdown": "^0.2.1",
     "metalsmith-permalinks": "^0.4.0",
-    "metalsmith-templates": "^0.6.0",
+    "metalsmith-serve": "0.0.7",
+    "metalsmith-watch": "^1.0.3",
     "metalsmith-word-count": "0.0.4",
     "text-table": "^0.2.0"
   },

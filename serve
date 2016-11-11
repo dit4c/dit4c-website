@@ -1,15 +1,16 @@
 #!/usr/bin/env node
 
 var common = require('./common'),
-    dev = require('metalsmith-dev');
+    serve = require('metalsmith-serve'),
+    watch = require('metalsmith-watch');
 
 // Fix build function so it runs without parameters
-var buildFunc = common.build;
-common.build = function() {
-  buildFunc.call(common, function(err) {
-    if (err) throw err;
+common
+  .use(serve({
+      port: 1313,
+      verbose: true
+  }))
+  .use(watch())
+  .build(function(err) {
+    if (err) { throw err; }
   });
-};
-
-dev.watch(common, ['templates/**/*']);
-dev.serve(common, 1313);

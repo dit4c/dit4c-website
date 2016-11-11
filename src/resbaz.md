@@ -1,6 +1,6 @@
 ---
 title: "DIT4C & ResBaz 2015"
-template: page.html
+layout: page.html
 permalink: false
 ---
 

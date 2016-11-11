@@ -1,9 +1,10 @@
 /* global: module */
 var Metalsmith = require('metalsmith'),
+    include = require('metalsmith-include-content'),
+    layouts = require('metalsmith-layouts'),
     less = require('metalsmith-less'),
     markdown = require('metalsmith-markdown'),
     permalinks = require('metalsmith-permalinks'),
-    templates = require('metalsmith-templates'),
     wordcount = require('metalsmith-word-count');
 
 var metadata = {
@@ -13,14 +14,17 @@ var metadata = {
 
 module.exports =
   Metalsmith(__dirname)
-    .clean(true)
+    .frontmatter(true)
     .metadata(metadata)
+    .clean(true)
+    .use(include())
     .use(less())
     .use(markdown())
+    .use(layouts({
+      "engine": "hogan",
+      "rename": true
+    }))
     .use(permalinks({
       "pattern": ":title"
-    }))
-    .use(templates({
-      "engine": "hogan"
     }))
     .use(wordcount());
