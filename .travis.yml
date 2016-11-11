@@ -13,7 +13,7 @@ after_success:
 - chmod 600 .travis/deploy.pem
 - ssh-add .travis/deploy.pem
 - git clone git@github.com:dit4c/dit4c.github.io.git build_tmp
-- mv build_tmp/.git build/.git && rm -rf build/*
+- mv build_tmp/.git build/.git && rm -rf build_tmp
 - export GIT_AUTHOR_NAME=`git log -1 --format="format:%an"`
 - export GIT_AUTHOR_EMAIL=`git log -1 --format="format:%ae"`
 - export GIT_COMMIT_BODY=`git log -1 --format="format:%B"`
