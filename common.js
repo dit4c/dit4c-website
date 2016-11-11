@@ -1,5 +1,6 @@
 /* global: module */
 var Metalsmith = require('metalsmith'),
+    assets = require('metalsmith-assets'),
     include = require('metalsmith-include-content'),
     layouts = require('metalsmith-layouts'),
     less = require('metalsmith-less'),
@@ -26,5 +27,9 @@ module.exports =
     }))
     .use(permalinks({
       "pattern": ":title"
+    }))
+    .use(assets({
+      source: './assets',
+      destination: '.'
     }))
     .use(wordcount());

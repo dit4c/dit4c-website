@@ -7,10 +7,16 @@ var common = require('./common'),
 // Fix build function so it runs without parameters
 common
   .use(serve({
-      port: 1313,
-      verbose: true
+    port: 1313,
+    verbose: true
   }))
-  .use(watch())
+  .use(watch({
+    paths: {
+      "${source}/**/*": true,
+      "assets/**/*": true,
+      "layouts/**/*": true,
+    }
+  }))
   .build(function(err) {
     if (err) { throw err; }
   });
