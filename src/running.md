@@ -1,11 +1,12 @@
 # In Development
 
 To run a minimal DIT4C environment in development, you need to run the following:
- * DIT4C portal
- * a DIT4C scheduler
- * Apache Cassandra
- * a CoreOS VM to serve as a compute node
- * a DIT4C image server (optional)
+
+* Apache Cassandra
+* DIT4C portal
+* a DIT4C scheduler
+* a CoreOS VM to serve as a compute node
+* a DIT4C image server (optional)
 
 When running in production, you are will also need to run a DIT4C routing server. By using a helper that utilizes [ngrok](https://ngrok.com/) we can avoid this requirement in development.
 
@@ -19,11 +20,15 @@ From tarball or Debian package:
 Docker image:
 <https://hub.docker.com/r/_/cassandra/>
 
-# Scheduler keys
+## DIT4C Scheduler
 
-DIT4C schedulers use PGP keys for identification & auth. You will need to create a PGP primary key for each scheduler. We'll use `gpg2`.
+### Scheduler keys
 
-First, we create a PGP primary key, solely for certification:
+DIT4C schedulers use PGP keys for identification, configuration and SSH authentication to compute nodes. You will need to create a PGP primary key for each scheduler. We'll use `gpg2`.
+
+#### Key Creation
+
+First, we create a PGP primary key on a separate secure machine, solely for certification:
 ```
 $ gpg2 --full-gen-key --expert
 gpg (GnuPG) 2.1.13; Copyright (C) 2016 Free Software Foundation, Inc.
@@ -111,7 +116,7 @@ uid           [ultimate] DIT4C dev scheduler (documentation example)
 
 ```
 
-We then add two sub-keys for signing and authentication:
+We then add two sub-keys for signing and authentication, choosing not to set password protection when prompted:
 
 ```
 $ gpg2 --expert --edit-key 34546BBDED7719C865C3C4E8210512A677C41E86
@@ -247,6 +252,35 @@ ssb  rsa2048/E33DA3F435A246F9
 gpg> save
 ```
 
+Future examples will use the key IDs above.
+
+#### Key usage explanation
+
+We now have a primary key and two sub-keys. While in development, key security isn't as important, however it's worthwhile thinking about how key security will operate in production.
+
+The **primary key** should be stored securely, preferably offline when not in use for key rotation or renewal. It's entirely possible it will only be used (every two years in this case) to update the PGP key expiry date.
+
+The **authentication sub-key** is used by the scheduler to identify itself to the portal, and is also transformed into the SSH key that is used to log into compute nodes. Both the public and secret key will need to be exported for use on the scheduler.
+
+The **signing sub-key** is only used for sending messages to the scheduler. Only the public component needs to be on the scheduler. The secret key should be stored securely, and may be transferred to a smart card or other hardware device if desired.
+
+#### Key export
+
+Export just the authentication secret sub-key:
+
+```
+gpg2 --armor \
+  --export-secret-subkeys CD0BC076A71E68E5! \
+  > dev_scheduler_secret_keyring.asc
+```
+
+Then export all the public keys:
+
+```
+gpg2 --armor \
+  --export 210512A677C41E86 \
+  > dev_scheduler_public_keyring.asc
+```
 
 
 
