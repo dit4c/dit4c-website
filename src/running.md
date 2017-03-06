@@ -6,7 +6,7 @@ permalink: false
 
 # In Development
 
-To run a minimal DIT4C environment in development, you need to run the following:
+To run a minimal DIT4C environment for development, you need to run the following:
 
 * Apache Cassandra
 * DIT4C portal
@@ -389,6 +389,73 @@ $ sbt ";project scheduler;run
   --portal-uri http://192.168.100.1:9000/messaging/scheduler"
   --config $(pwd)/scheduler.conf
 ```
+
+#### Create cluster access pass
+
+To use a scheduler's clusters, you will need a cluster access pass. It is a signed message in URL form, enumerating which clusters the holder of the token has access to, and for how long (denoted by the signature validity period).
+
+```
+$ ./scripts/create_cluster_access_token.sh
+Using libprotoc 3.1.0
+Cluster ID (enter to finish): default
+Cluster ID (enter to finish):
+
+Description (leave empty for none): Documentation example
+
+###################
+Cluster Access Pass
+TEXT:
+clusterIds: "default"
+description: "Documentation example"
+BINARY:
+00000000  0a 07 64 65 66 61 75 6c  74 12 15 44 6f 63 75 6d  |..default..Docum|
+00000010  65 6e 74 61 74 69 6f 6e  20 65 78 61 6d 70 6c 65  |entation example|
+00000020
+###################
+GPG key to sign with (enter to finish): 34546BBDED7719C865C3C4E8210512A677C41E86
+GPG key to sign with (enter to finish):
+Please specify how long the signature should be valid.
+         0 = signature does not expire
+      <n>  = signature expires in n days
+      <n>w = signature expires in n weeks
+      <n>m = signature expires in n months
+      <n>y = signature expires in n years
+Signature is valid for? (0) 1m
+Signature expires at Wed 05 Apr 2017 16:40:57 AEST
+Is this correct? (y/N) y
+###################
+Signed Cluster Access Pass
+Using:
+34546BBDED7719C865C3C4E8210512A677C41E86
+Armored:
+-----BEGIN PGP MESSAGE-----
+Version: GnuPG v2
+
+owEBXAGj/pANAwAKAeM9o/Q1okb5AcsmYgBYvQR7CgdkZWZhdWx0EhVEb2N1bWVu
+dGF0aW9uIGV4YW1wbGWJASIEAAEKAAwFAli9BHsFgwAnjQAACgkQ4z2j9DWiRvkK
+Lgf/bYkDQr6owkf8NFocJ+4fguDuCNTAw1hVsrVnGupXjGjZn2QvYFvrMe9iK/QR
+TGwzcnljglv/JN8J5kookaueVOI8uNN9g2BgYpjm+LEzNYtGzfs2FvGUHORHPDKt
+bvGJkqnXaOu8G8PXH3dsEICVcCV37rEVAbhPb4UoyiSVecHolU/TtOMUa/T4Vie2
+ABgP4TnPvahj9eS4nhfXNWNh5MigPSP5x2d1WAeFAUoaxSY5sbY0hlML0lWEfapG
+tQA8W4p+ja5D8Mi1wmapDa3DNQgeIcJoTCn1LiYlWTGn/W6FkemTCztvELU15xnf
+HS3q1F42Gekvz+uEW66y/xHSlw==
+=R3+y
+-----END PGP MESSAGE-----
+URL-encoded:
+owEBXAGj_pANAwAKAeM9o_Q1okb5AcsmYgBYvQR7CgdkZWZhdWx0EhVEb2N1bWVudGF0aW9uIGV4YW1wbGWJASIEAAEKAAwFAli9BHsFgwAnjQAACgkQ4z2j9DWiRvkKLgf_bYkDQr6owkf8NFocJ-4fguDuCNTAw1hVsrVnGupXjGjZn2QvYFvrMe9iK_QRTGwzcnljglv_JN8J5kookaueVOI8uNN9g2BgYpjm-LEzNYtGzfs2FvGUHORHPDKtbvGJkqnXaOu8G8PXH3dsEICVcCV37rEVAbhPb4UoyiSVecHolU_TtOMUa_T4Vie2ABgP4TnPvahj9eS4nhfXNWNh5MigPSP5x2d1WAeFAUoaxSY5sbY0hlML0lWEfapGtQA8W4p-ja5D8Mi1wmapDa3DNQgeIcJoTCn1LiYlWTGn_W6FkemTCztvELU15xnfHS3q1F42Gekvz-uEW66y_xHSlw
+```
+
+You can then use the URL-encoded payload in a link of the form:
+
+`<dit4c-portal>/share/clusters/<scheduler_id>/<payload>`
+
+In this example, that would be:
+
+```
+http://192.168.100.1:9000/share/clusters/34546BBDED7719C865C3C4E8210512A677C41E86/owEBXAGj_pANAwAKAeM9o_Q1okb5AcsmYgBYvQR7CgdkZWZhdWx0EhVEb2N1bWVudGF0aW9uIGV4YW1wbGWJASIEAAEKAAwFAli9BHsFgwAnjQAACgkQ4z2j9DWiRvkKLgf_bYkDQr6owkf8NFocJ-4fguDuCNTAw1hVsrVnGupXjGjZn2QvYFvrMe9iK_QRTGwzcnljglv_JN8J5kookaueVOI8uNN9g2BgYpjm-LEzNYtGzfs2FvGUHORHPDKtbvGJkqnXaOu8G8PXH3dsEICVcCV37rEVAbhPb4UoyiSVecHolU_TtOMUa_T4Vie2ABgP4TnPvahj9eS4nhfXNWNh5MigPSP5x2d1WAeFAUoaxSY5sbY0hlML0lWEfapGtQA8W4p-ja5D8Mi1wmapDa3DNQgeIcJoTCn1LiYlWTGn_W6FkemTCztvELU15xnfHS3q1F42Gekvz-uEW66y_xHSlw
+```
+
+You may wish to use a URL shortener for easier distribution, though consider the security implications before doing so.
 
 ## CoreOS VM
 
