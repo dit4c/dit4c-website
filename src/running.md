@@ -1,3 +1,9 @@
+---
+title: "Running DIT4C"
+layout: page.html
+permalink: false
+---
+
 # In Development
 
 To run a minimal DIT4C environment in development, you need to run the following:
