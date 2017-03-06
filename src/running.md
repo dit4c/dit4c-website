@@ -30,7 +30,7 @@ Docker image:
 
 ### Running the portal
 
-Running the portal in development requires that you have [Git][https://git-scm.com/] & [SBT](http://www.scala-sbt.org/) installed.
+Running the portal in development requires that you have [Git](https://git-scm.com/) & [SBT](http://www.scala-sbt.org/) installed.
 
 ```
 git clone https://github.com/dit4c/dit4c.git
@@ -40,7 +40,7 @@ sbt ";project portal;~run -Dplay.crypto.secret=foobar"
 
 ### Portal IP address
 
-To send messages to the DIT4C portal, other services need a hostname or IP address. In production this will likely be DNS A record pointing to a public IPv4 address. In development, because not all DIT4C services run on the same network stack (eg. compute nodes), using "localhost" (127.0.0.1 or ::1) won't work. It's important to instead use an IP address that's reachable by all components. Most likely this will be the gateway address of the private network you're running the compute node VM on, but it could be another address.
+To send messages to the DIT4C portal, other services need a hostname or IP address. In production this will likely be DNS A record pointing to a public IPv4 address. In development, because not all DIT4C services run on the same network stack (eg. compute nodes), using "localhost" (`127.0.0.1` or `::1`) won't work. It's important to instead use an IP address that's reachable by all components. Most likely this will be the gateway address of the private network you're running the compute node VM on, but it could be another address.
 
 For future examples, we'll use `192.168.100.1`.
 
