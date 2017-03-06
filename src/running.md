@@ -20,7 +20,25 @@ From tarball or Debian package:
 Docker image:
 <https://hub.docker.com/r/_/cassandra/>
 
-## DIT4C Scheduler
+## DIT4C portal
+
+### Running the portal
+
+Running the portal in development requires that you have [Git][https://git-scm.com/] & [SBT](http://www.scala-sbt.org/) installed.
+
+```
+git clone https://github.com/dit4c/dit4c.git
+cd dit4c
+sbt ";project portal;~run -Dplay.crypto.secret=foobar"
+```
+
+### Portal IP address
+
+To send messages to the DIT4C portal, other services need a hostname or IP address. In production this will likely be DNS A record pointing to a public IPv4 address. In development, because not all DIT4C services run on the same network stack (eg. compute nodes), using "localhost" (127.0.0.1 or ::1) won't work. It's important to instead use an IP address that's reachable by all components. Most likely this will be the gateway address of the private network you're running the compute node VM on, but it could be another address.
+
+For future examples, we'll use `192.168.100.1`.
+
+## DIT4C scheduler
 
 ### Scheduler keys
 
@@ -252,6 +270,19 @@ ssb  rsa2048/E33DA3F435A246F9
 gpg> save
 ```
 
+Once saved, get the full PGP key fingerprints using the primary key ID:
+
+```
+$ gpg2 --with-subkey-fingerprint --list-keys 210512A677C41E86
+pub   rsa4096 2017-03-03 [C] [expires: 2019-03-03]
+      34546BBDED7719C865C3C4E8210512A677C41E86
+uid           [ unknown] DIT4C dev scheduler (documentation example)
+sub   rsa2048 2017-03-03 [A]
+      6A6C97128AD8EAD1769E9B6DCD0BC076A71E68E5
+sub   rsa2048 2017-03-03 [S]
+      BE3950379932FF45106DF313E33DA3F435A246F9
+```
+
 Future examples will use the key IDs above.
 
 #### Key usage explanation
@@ -269,21 +300,89 @@ The **signing sub-key** is only used for sending messages to the scheduler. Only
 Export just the authentication secret sub-key:
 
 ```
-gpg2 --armor \
-  --export-secret-subkeys CD0BC076A71E68E5! \
+$ gpg2 --armor \
+  --export-secret-subkeys 6A6C97128AD8EAD1769E9B6DCD0BC076A71E68E5! \
   > dev_scheduler_secret_keyring.asc
 ```
 
 Then export all the public keys:
 
 ```
-gpg2 --armor \
-  --export 210512A677C41E86 \
+$ gpg2 --armor \
+  --export 34546BBDED7719C865C3C4E8210512A677C41E86 \
   > dev_scheduler_public_keyring.asc
 ```
 
+#### Create scheduler in portal
 
+When running in development, open `<ip-address>:9000` to ensure the portal app is fully loaded.
 
+SSH to port 2222, with username `dit4c` and password as the value of `ssh.password`, or if not set, `play.crypto.secret`. In the example above, this is `foobar`.
+
+Once you have a Scala REPL running inside the portal environment, send a message to create a new scheduler:
+
+```
+$ ssh -p 2222 dit4c@localhost
+Warning: Permanently added '[localhost]:2222' (RSA) to the list of known hosts.
+Password authentication
+Password:
+Compiling replBridge.sc
+Compiling interpBridge.sc
+Compiling HardcodedPredef.sc
+Compiling ArgsPredef.sc
+Compiling predef.sc
+Compiling SharedPredef.sc
+Compiling LoadedPredef.sc
+Welcome to the Ammonite Repl 0.8.1
+(Scala 2.11.8 Java 1.8.0_121)
+@ import domain._
+import domain._
+@ import services._
+import services._
+@ app.actorSystem.eventStream.publish(
+  SchedulerSharder.Envelope("34546BBDED7719C865C3C4E8210512A677C41E86",
+  SchedulerAggregate.Create))
+
+@ exit
+```
+
+When the scheduler connects & sends its PGP public keys, the portal will match them to the provided fingerprint.
+
+#### Running the scheduler
+
+To run the scheduler with a single cluster called "default":
+
+```
+$ sbt ";project scheduler;run
+  --keys $(pwd)/dev_scheduler_secret_keyring.asc
+  --keys $(pwd)/dev_scheduler_public_keyring.asc
+  --portal-uri http://192.168.100.1:9000/messaging/scheduler"
+```
+
+If multiple clusters are necessary, a config file can be supplied.
+
+`scheduler.conf`:
+
+```
+clusters = null
+clusters {
+  instructors {
+    displayName = "Instructor Sandbox"
+  }
+  training {
+    displayName = "Training"
+    supportsSave = false
+  }
+}
+```
+
+```
+$ sbt ";project scheduler;run
+  --keys $(pwd)/dev_scheduler_secret_keyring.asc
+  --keys $(pwd)/dev_scheduler_public_keyring.asc
+  --portal-uri http://192.168.100.1:9000/messaging/scheduler"
+  --config $(pwd)/scheduler.conf
+```
 
 ## CoreOS VM
 
