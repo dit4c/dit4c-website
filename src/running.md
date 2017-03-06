@@ -414,12 +414,93 @@ $ ssh -p 2223 core@localhost
 Warning: Permanently added '[localhost]:2223' (ECDSA) to the list of known hosts.
 Last login: Mon Mar  6 05:09:39 UTC 2017 from 10.0.2.2 on pts/0
 CoreOS alpha (1185.0.0)
-core@coreos_production_qemu-1185-0-0 ~ $ curl -sL http://192.168.100.1:9000/schedulers/34546BBDED7719C865C3C4E8210512A677C41E86/ssh-keys > /tmp/keys
-core@coreos_production_qemu-1185-0-0 ~ $ cat /tmp/keys
+core@coreos_production_qemu-1185-0-0 ~ $ export PS1="vm \$ "
+vm $ curl -sL http://192.168.100.1:9000/schedulers/34546BBDED7719C865C3C4E8210512A677C41E86/ssh-keys > /tmp/keys
+vm $ cat /tmp/keys
 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDGst1Yze4M3mMYGkq8l+oubbbeh9zX2Iu/QBKMNAHCUM80XK0FDQuqv0g6syTiln+hXi7RcmZogygm0n71l87iLiCchKZn+BwLJbF8TowPn5D7UcscRyGQ89trqfZdvCTz+y9zObPooS0HmhHj3jTNJ1aWpeFdhkPx7CYEa2e/1/M+Q9TtV06ilCHQwWwCBND/lF0QpKPothwT8dHbvMjtt04xV70NVf7qaWGtGirTq77NciQT3vNeRDDryXaGOUtCXlOdKu/NrAUoRlgE7nwgP1lWWm04puJqeGmmwqr7BRn8j/pvmEJQ8en964hlU8Dra0o0Tj6EVgNU9QbIeZmn
-core@coreos_production_qemu-1185-0-0 ~ $ update-ssh-keys -A scheduler < /tmp/keys
+vm $ update-ssh-keys -A scheduler < /tmp/keys
 Adding/updating scheduler:
 2048 SHA256:166+GTUeSN6zcOLrsHtBSfF0SCTC1EYLKuHOzcBXZ1g no comment (RSA)
 Updated /home/core/.ssh/authorized_keys
-core@coreos_production_qemu-1185-0-0 ~ $ exit
+vm $ ssh-keyscan 127.0.0.1 2>/dev/null | grep -i RSA | awk '{print $2 " " $3 }' | ssh-keygen -l -f -
+2048 SHA256:8QVNTTUeP2nN09/58Wevbbb47+foh/3YcKhJ/uM7T8o no comment (RSA)
+vm $ exit
+```
+
+### Register compute node with scheduler
+
+The scheduler does not have a web interface of its own. Instead, when connected to the portal it can receive messages signed by its own keys. As a result, in production the host running the scheduler does not need to allow any incoming traffic, only outgoing.
+
+A message is necessary to create a new compute node:
+
+```
+$ ./scripts/add_compute_node.sh
+######################################################################## 100.0%
+Using libprotoc 3.1.0
+Cluster ID: default
+Host: localhost
+Port: 2223
+Username: core
+SSH Fingerprint (enter to finish): SHA256:8QVNTTUeP2nN09/58Wevbbb47+foh/3YcKhJ/uM7T8o
+SSH Fingerprint (enter to finish):
+
+###################
+Add node request
+TEXT:
+addNode: {
+clusterId: "default"
+host: "localhost"
+port: 2223
+username: "core"
+sshHostKeyFingerprints: "SHA256:8QVNTTUeP2nN09/58Wevbbb47+foh/3YcKhJ/uM7T8o"
+}
+BINARY:
+00000000  0a 51 0a 07 64 65 66 61  75 6c 74 12 09 6c 6f 63  |.Q..default..loc|
+00000010  61 6c 68 6f 73 74 18 af  11 22 04 63 6f 72 65 2a  |alhost...".core*|
+00000020  32 53 48 41 32 35 36 3a  38 51 56 4e 54 54 55 65  |2SHA256:8QVNTTUe|
+00000030  50 32 6e 4e 30 39 2f 35  38 57 65 76 62 62 62 34  |P2nN09/58Wevbbb4|
+00000040  37 2b 66 6f 68 2f 33 59  63 4b 68 4a 2f 75 4d 37  |7+foh/3YcKhJ/uM7|
+00000050  54 38 6f                                          |T8o|
+00000053
+###################
+GPG key to sign with (enter to finish): 34546BBDED7719C865C3C4E8210512A677C41E86
+GPG key to sign with (enter to finish):
+Please specify how long the signature should be valid.
+         0 = signature does not expire
+      <n>  = signature expires in n days
+      <n>w = signature expires in n weeks
+      <n>m = signature expires in n months
+      <n>y = signature expires in n years
+Signature is valid for? (0) 1
+Signature expires at Tue 07 Mar 2017 15:48:44 AEST
+Is this correct? (y/N) y
+###################
+Signed add node request
+Using:
+34546BBDED7719C865C3C4E8210512A677C41E86
+Armored:
+-----BEGIN PGP MESSAGE-----
+Version: GnuPG v2
+
+owEBjwFw/pANAwAKAeM9o/Q1okb5ActZYgBYvPg9ClEKB2RlZmF1bHQSCWxvY2Fs
+aG9zdBivESIEY29yZSoyU0hBMjU2OjhRVk5UVFVlUDJuTjA5LzU4V2V2YmJiNDcr
+Zm9oLzNZY0toSi91TTdUOG+JASIEAAEKAAwFAli8+D0FgwABUYAACgkQ4z2j9DWi
+RvnjQwgAzFqqFy0mqUqBfY0MHKO1g1AqltlFzCvx4fdLmelu+8M0bs/n6Co4Es4S
+m3zPPurnoqZj024jeoF5KAJuYd+NpX4YGuSEUoFo3FYkdhJgwGqoJwQtEP0XZWOw
+Pbo7AWkMHFTsLSz78MwMtaUA27o5EWb+kWssuRn7hZQO13fO5Xz2KTB3LiXs+hjT
+3/OKFF+4ga2yYyUfgwnwNO3dAs0bp40S+PcPZ0VLMxn0fjEJI9oW5AhE99QtI5rZ
+u8XSiPNB1Ot8vdi6G85gNd1HX5kU+1CSY+glu98e5b2DQIRd62Cp/GvezeQOi3LX
+xhgqWD3f5d3+MtwYPp39hfrSsHF2Dw==
+=7CMK
+-----END PGP MESSAGE-----
+```
+
+Copy everything after `Armored:` and go to: `http://192.168.100.1:9000/messaging/scheduler/34546BBDED7719C865C3C4E8210512A677C41E86/send`
+
+![Sending message to scheduler](/images/screenshots/send_message_to_scheduler.png)
+
+You should see message in the scheduler logs, reporting that the compute node has been created:
+
+```
+[info] 16:01:34.981 INFO  dit4c.scheduler.domain.RktNode - Node RktClusterManager-default-RktNode-core_localhost_2223_SHA256%3A8QVNTTUeP2nN09%2F58Wevbbb47%2Bfoh%2F3YcKhJ%2FuM7T8o: JustCreated → Active
 ```
