@@ -394,6 +394,8 @@ $ sbt ";project scheduler;run
 
 In theory, you could use any VM that has systemd and [rkt](https://coreos.com/rkt/). In practice, it's simpler to use CoreOS. In production, you're likely to use [cloud-config](https://coreos.com/os/docs/latest/cloud-config.html) or [Ignition](https://coreos.com/ignition/docs/latest/) to configure the reboot strategy, add SSH keys and mount storage, however the default config will work fine for development.
 
+### Starting
+
 There are many ways to run a CoreOS VM on your desktop. One way that works quite well for DIT4C development is using QEMU:
 <https://coreos.com/os/docs/latest/booting-with-qemu.html>
 
@@ -401,4 +403,23 @@ Start the VM with a different port, as `2222/tcp` is used by the DIT4C portal:
 
 ```
 ./coreos_production_qemu.sh -p 2223 -nographic
+```
+
+### Installing SSH keys
+
+You will need to deploy the SSH keys of the scheduler to the compute node. Fortunately, the DIT4C portal exposes that information via the portal.
+
+```
+$ ssh -p 2223 core@localhost
+Warning: Permanently added '[localhost]:2223' (ECDSA) to the list of known hosts.
+Last login: Mon Mar  6 05:09:39 UTC 2017 from 10.0.2.2 on pts/0
+CoreOS alpha (1185.0.0)
+core@coreos_production_qemu-1185-0-0 ~ $ curl -sL http://192.168.100.1:9000/schedulers/34546BBDED7719C865C3C4E8210512A677C41E86/ssh-keys > /tmp/keys
+core@coreos_production_qemu-1185-0-0 ~ $ cat /tmp/keys
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDGst1Yze4M3mMYGkq8l+oubbbeh9zX2Iu/QBKMNAHCUM80XK0FDQuqv0g6syTiln+hXi7RcmZogygm0n71l87iLiCchKZn+BwLJbF8TowPn5D7UcscRyGQ89trqfZdvCTz+y9zObPooS0HmhHj3jTNJ1aWpeFdhkPx7CYEa2e/1/M+Q9TtV06ilCHQwWwCBND/lF0QpKPothwT8dHbvMjtt04xV70NVf7qaWGtGirTq77NciQT3vNeRDDryXaGOUtCXlOdKu/NrAUoRlgE7nwgP1lWWm04puJqeGmmwqr7BRn8j/pvmEJQ8en964hlU8Dra0o0Tj6EVgNU9QbIeZmn
+core@coreos_production_qemu-1185-0-0 ~ $ update-ssh-keys -A scheduler < /tmp/keys
+Adding/updating scheduler:
+2048 SHA256:166+GTUeSN6zcOLrsHtBSfF0SCTC1EYLKuHOzcBXZ1g no comment (RSA)
+Updated /home/core/.ssh/authorized_keys
+core@coreos_production_qemu-1185-0-0 ~ $ exit
 ```
