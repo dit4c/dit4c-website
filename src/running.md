@@ -4,7 +4,11 @@ layout: page.html
 permalink: false
 ---
 
-# In Development
+# Running DIT4C
+
+## Overview
+
+### In Development
 
 To run a minimal DIT4C environment for development, you need to run the following:
 
@@ -12,9 +16,20 @@ To run a minimal DIT4C environment for development, you need to run the followin
 * DIT4C portal
 * a DIT4C scheduler
 * a CoreOS VM to serve as a compute node
-* a DIT4C image server (optional)
 
-When running in production, you are will also need to run a DIT4C routing server. By using a helper that utilizes [ngrok](https://ngrok.com/) we can avoid this requirement in development.
+You may optionally run:
+
+* a DIT4C image server ([dit4c-imageserver-filesystem](https://github.com/dit4c/dit4c-imageserver-filesystem/)/[dit4c-imageserver-swift](https://github.com/dit4c/dit4c-imageserver-swift/))
+* a DIT4C routing server ([dit4c-routingserver-ssh][dit4c-routingserver-ssh])
+* a DIT4C file server ([dit4c-fileserver-9pfs](https://github.com/dit4c/dit4c-fileserver-9pfs/))
+
+If you do not wish to save instances, you do not need to deploy an image server. By using a helper that utilizes [ngrok](https://ngrok.com/), you do not need to run a routing server in development. However, you should avoid using ngrok for the traffic demands of a production service.
+
+### In Production
+
+When running the portal in production, you will need a TLS certificate, as HTTPS is required for secure OAuth. A [Let's Encrypt](https://letsencrypt.org/) certificate will be perfectly satisfactory. A self-signed certificate will not, as almost every service of DIT4C accesses the portal and expects a valid certificate when using HTTPS.
+
+You will also need to run a DIT4C routing server. To use the recommended routing server with ([dit4c-routingserver-ssh][dit4c-routingserver-ssh]) you will require a wildcard certificate. Using HTTPS is **strongly** advised, but not strictly necessary, and you can use a self-signed certificate for test environments if necessary.
 
 ## Apache Cassandra
 
@@ -571,3 +586,9 @@ You should see message in the scheduler logs, reporting that the compute node ha
 ```
 [info] 16:01:34.981 INFO  dit4c.scheduler.domain.RktNode - Node RktClusterManager-default-RktNode-core_localhost_2223_SHA256%3A8QVNTTUeP2nN09%2F58Wevbbb47%2Bfoh%2F3YcKhJ%2FuM7T8o: JustCreated → Active
 ```
+
+
+
+
+
+[dit4c-routingserver-ssh]: https://github.com/dit4c/dit4c-routingserver-ssh/
