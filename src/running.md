@@ -12,10 +12,10 @@ permalink: false
 
 To run a minimal DIT4C environment for development, you need to run the following:
 
-* Apache Cassandra
-* DIT4C portal
-* a DIT4C scheduler
-* a CoreOS VM to serve as a compute node
+* [Apache Cassandra](#apache-cassandra)
+* [DIT4C portal](#dit4c-portal)
+* [a DIT4C scheduler](#dit4c-scheduler)
+* [a CoreOS VM to serve as a compute node](#coreos-vm)
 
 You may optionally run:
 
@@ -382,6 +382,14 @@ $ sbt ";project scheduler;run
 
 If multiple clusters are necessary, a config file can be supplied.
 
+```
+$ sbt ";project scheduler;run
+  --keys $(pwd)/dev_scheduler_secret_keyring.asc
+  --keys $(pwd)/dev_scheduler_public_keyring.asc
+  --portal-uri http://192.168.100.1:9000/messaging/scheduler"
+  --config $(pwd)/scheduler.conf
+```
+
 `scheduler.conf`:
 
 ```
@@ -395,14 +403,6 @@ clusters {
     supportsSave = false
   }
 }
-```
-
-```
-$ sbt ";project scheduler;run
-  --keys $(pwd)/dev_scheduler_secret_keyring.asc
-  --keys $(pwd)/dev_scheduler_public_keyring.asc
-  --portal-uri http://192.168.100.1:9000/messaging/scheduler"
-  --config $(pwd)/scheduler.conf
 ```
 
 #### Create cluster access pass
