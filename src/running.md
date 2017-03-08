@@ -29,9 +29,11 @@ If you do not wish to save instances, you do not need to deploy an image server.
 
 When running the portal in production, you will need a TLS certificate, as HTTPS is required for secure OAuth. A [Let's Encrypt](https://letsencrypt.org/) certificate will be perfectly satisfactory. A self-signed certificate will not, as almost every service of DIT4C accesses the portal and expects a valid certificate when using HTTPS.
 
-You will also need to run a DIT4C routing server. To use the recommended routing server with ([dit4c-routingserver-ssh][dit4c-routingserver-ssh]) you will require a wildcard certificate. Using HTTPS is **strongly** advised, but not strictly necessary, and you can use a self-signed certificate for test environments if necessary.
+You will also need to run a DIT4C routing server. To use the recommended routing server with ([dit4c-routingserver-ssh][dit4c-routingserver-ssh]) you will require a wildcard certificate. Using HTTPS is **strongly** advised, and you can use a self-signed certificate for test environments if necessary.
 
 ## Apache Cassandra
+
+### In Development
 
 A database is required for both the portal and scheduler. Ensure Cassandra is available somehow on `localhost:9042`. By default, no authentication is expected.
 
@@ -41,9 +43,18 @@ From tarball or Debian package:
 Docker image:
 <https://hub.docker.com/r/_/cassandra/>
 
+### In Production
+
+You likely will want to run Cassandra with replication. While the portal is not currently capable of running as a cluster, this will allow restart from a cold stand-by machine should that be necessary.
+
+Cassandra authentication can be configured [as described in its manual](https://docs.datastax.com/en/cassandra/3.0/cassandra/configuration/secureConfigNativeAuth.html). The DIT4C portal and scheduler use [akka-persistence-cassandra](https://github.com/akka/akka-persistence-cassandra/), which provides [authentication configuration](https://github.com/akka/akka-persistence-cassandra/blob/v0.23/src/main/resources/reference.conf#L164).
+
+
 ## DIT4C portal
 
-### Running the portal
+### In Development
+
+#### Running the portal
 
 Running the portal in development requires that you have [Git](https://git-scm.com/) & [SBT](http://www.scala-sbt.org/) installed.
 
@@ -53,7 +64,7 @@ cd dit4c
 sbt ";project portal;~run -Dplay.crypto.secret=foobar"
 ```
 
-### Portal IP address
+#### Portal IP address
 
 To send messages to the DIT4C portal, other services need a hostname or IP address. In production this will likely be DNS A record pointing to a public IPv4 address. In development, because not all DIT4C services run on the same network stack (eg. compute nodes), using "localhost" (`127.0.0.1` or `::1`) won't work. It's important to instead use an IP address that's reachable by all components. Most likely this will be the gateway address of the private network you're running the compute node VM on, but it could be another address.
 
