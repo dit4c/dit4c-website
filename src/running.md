@@ -19,7 +19,7 @@ To run a minimal DIT4C environment for development, you need to run the followin
 
 You may optionally run:
 
-* a DIT4C image server ([dit4c-imageserver-filesystem](https://github.com/dit4c/dit4c-imageserver-filesystem/)/[dit4c-imageserver-swift](https://github.com/dit4c/dit4c-imageserver-swift/))
+* a DIT4C image server ([dit4c-imageserver-filesystem][dit4c-imageserver-filesystem]/[dit4c-imageserver-swift][dit4c-imageserver-swift])
 * a DIT4C routing server ([dit4c-routingserver-ssh][dit4c-routingserver-ssh])
 * a DIT4C file server ([dit4c-fileserver-9pfs](https://github.com/dit4c/dit4c-fileserver-9pfs/))
 
@@ -155,7 +155,7 @@ images {
   # DIT4C image server for saving images
   server="https://images.dit4c.example"
   # Helper ACI for uploading images
-  saveHelper="https://penstack-swift-server.example:8888/v1/AUTH_faa5bca1140a4824bfc96215c92498dd/dit4c-public-images/dit4c-helper-upload-webdav.linux.amd64.aci"
+  saveHelper="https://openstack-swift-server.example:8888/v1/AUTH_faa5bca1140a4824bfc96215c92498dd/dit4c-public-images/dit4c-helper-upload-webdav.linux.amd64.aci"
   # Public container images (converted using docker2aci)
   public=null
   public {
@@ -756,8 +756,17 @@ You should see message in the scheduler logs, reporting that the compute node ha
 [info] 16:01:34.981 INFO  dit4c.scheduler.domain.RktNode - Node RktClusterManager-default-RktNode-core_localhost_2223_SHA256%3A8QVNTTUeP2nN09%2F58Wevbbb47%2Bfoh%2F3YcKhJ%2FuM7T8o: JustCreated → Active
 ```
 
+---
+
+## DIT4C image server
+
+See [dit4c-imageserver-filesystem][dit4c-imageserver-filesystem] or [dit4c-imageserver-swift][dit4c-imageserver-swift] for details on running an image server.
+
+You should ensure `image.server` is set, either with:
+ * the run option `-Dimage.server="https://images.dit4c.example"`, or
+ * in `prod.conf`.
 
 
-
-
+[dit4c-imageserver-filesystem]: https://github.com/dit4c/dit4c-imageserver-filesystem
+[dit4c-imageserver-swift]: https://github.com/dit4c/dit4c-imageserver-swift
 [dit4c-routingserver-ssh]: https://github.com/dit4c/dit4c-routingserver-ssh/
