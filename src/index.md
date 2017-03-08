@@ -63,6 +63,12 @@ SSL for communication between the portal and individual compute nodes, providing
 
 ---
 
+### Running
+
+Let's [get started](./running.html)...
+
+---
+
 ### Release Signing Key
 
 ```
