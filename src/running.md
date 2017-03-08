@@ -15,7 +15,7 @@ To run a minimal DIT4C environment for development, you need to run the followin
 * [Apache Cassandra](#apache-cassandra)
 * [DIT4C portal](#dit4c-portal)
 * [a DIT4C scheduler](#dit4c-scheduler)
-* [a CoreOS VM to serve as a compute node](#coreos-vm)
+* [a CoreOS VM to serve as a compute node](#coreos-vm-compute-node)
 
 You may optionally run:
 
