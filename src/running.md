@@ -45,10 +45,11 @@ Docker image:
 
 ### In Production
 
-You likely will want to run Cassandra with replication. While the portal is not currently capable of running as a cluster, this will allow restart from a cold stand-by machine should that be necessary.
+You likely will want to run Cassandra with replication. While the portal is not currently capable of running as a cluster, this will allow relatively quick restart on a cold stand-by machine should that be necessary. If you wish to use etcd to coordinate that cluster, take a look at <https://github.com/dit4c/container-cassandra-etcd>.
 
 Cassandra authentication can be configured [as described in its manual](https://docs.datastax.com/en/cassandra/3.0/cassandra/configuration/secureConfigNativeAuth.html). The DIT4C portal and scheduler use [akka-persistence-cassandra](https://github.com/akka/akka-persistence-cassandra/), which provides [authentication configuration](https://github.com/akka/akka-persistence-cassandra/blob/v0.23/src/main/resources/reference.conf#L164).
 
+Examples of Cassandra backup scripts can be found in <https://github.com/dit4c/backup-scripts>.
 
 ## DIT4C portal
 
@@ -69,6 +70,130 @@ sbt ";project portal;~run -Dplay.crypto.secret=foobar"
 To send messages to the DIT4C portal, other services need a hostname or IP address. In production this will likely be DNS A record pointing to a public IPv4 address. In development, because not all DIT4C services run on the same network stack (eg. compute nodes), using "localhost" (`127.0.0.1` or `::1`) won't work. It's important to instead use an IP address that's reachable by all components. Most likely this will be the gateway address of the private network you're running the compute node VM on, but it could be another address.
 
 For future examples, we'll use `192.168.100.1`.
+
+### In Production
+
+#### Running the portal container
+
+Container builds of the portal are available for quick start and upgrading. They can be built from source using [scripts/build_containers.sh](https://github.com/dit4c/dit4c/blob/master/scripts/build_containers.sh).
+
+This also makes it easy to reverse-proxy the DIT4C portal behind a HTTP2 reverse-proxy for improved performance and security.
+
+To run the container using a [nghttpx reverse-proxy](https://nghttp2.org/documentation/nghttpx.1.html):
+```
+/usr/bin/rkt run \
+  --dns=8.8.8.8 \
+  --hostname=dit4c-portal \
+  --hosts-entry=127.0.0.1=dit4c-portal \
+  --volume tls,kind=host,source=/etc/tls,readOnly=true \
+  --volume=conf,kind=host,source=/etc/dit4c-portal,readOnly=true \
+  https://github.com/dit4c/dit4c/releases/download/v0.10.2/dit4c-portal.linux.amd64.aci \
+  --mount volume=conf,target=/conf \
+  --port ssh:2222 \
+  -- \
+  -Dconfig.file=/conf/prod.conf \
+  --- \
+  https://github.com/dit4c/dockerfile-nghttpx/releases/download/1.1.1/nghttpx.linux.amd64.aci \
+  --mount volume=conf,target=/data/conf \
+  --mount volume=tls,target=/data/tls \
+  --port 3000-tcp:443 \
+  -- \
+  --conf=/data/conf/nghttpx.conf \
+  --backend=127.0.0.1,9000 \
+  /data/tls/server.key /data/tls/server.crt
+```
+
+`nghttpx.conf`:
+```
+accesslog-file=/dev/stdout
+errorlog-file=/dev/stderr
+
+backend-read-timeout=86400
+http2-no-cookie-crumbling=true
+ciphers=ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-DSS-AES128-GCM-SHA256:kEDH+AESGCM:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-DSS-AES128-SHA256:DHE-RSA-AES256-SHA256:DHE-DSS-AES256-SHA:DHE-RSA-AES256-SHA:AES128-GCM-SHA256:AES256-GCM-SHA384:AES128-SHA256:AES256-SHA256:AES128-SHA:AES256-SHA:AES:CAMELLIA:DES-CBC3-SHA:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!MD5:!PSK:!aECDH:!EDH-DSS-DES-CBC3-SHA:!EDH-RSA-DES-CBC3-SHA:!KRB5-DES-CBC3-SHA
+add-response-header=Strict-Transport-Security: max-age=15724800; includeSubDomains
+add-forwarded=by,for,host,proto
+forwarded-by=ip
+forwarded-for=ip
+```
+
+Example `nghttpx.conf`:
+
+```
+# include the base config - very important!
+include "application"
+
+cassandra-settings {
+  authentication {
+    username="cassandra-user"
+    password="6TxnrbXIuWh5u1Q2LDVEpMmo4ASQjCET"
+  }
+  cluster-id = "dit4c-portal"
+  contact-points = ["10.99.1.20", "10.99.1.30", "10.99.1.40"]
+  replication-strategy = "NetworkTopologyStrategy"
+  data-center-replication-factors = ["melbourne-qh2-uom:1", "melbourne-np:1", "QRIScloud:1"]
+  used-hosts-per-remote-dc = 1
+  write-consistency = "QUORUM"
+  read-consistency = "QUORUM"
+}
+cassandra-journal = ${cassandra-settings}
+cassandra-snapshot-store = ${cassandra-settings}
+
+silhouette {
+  # GitHub API credentials
+  github.clientID=69be19206bcda8e7491c
+  github.clientSecret=32aaba716908b4ef73fb8bbd3096b156
+  # RapidAAF (Australian Access Federation) credentials
+  rapidaaf.url="https://rapid.aaf.edu.au/jwt/authnrequest/research/BMXaBBFAGMLFYlpxbOI9SY"
+  rapidaaf.secret=vLiGY1QkMCjmhSQ3ryWEjhzZSYInPqaN
+}
+images {
+  # DIT4C image server for saving images
+  server="https://images.dit4c.example"
+  # Helper ACI for uploading images
+  saveHelper="https://penstack-swift-server.example:8888/v1/AUTH_faa5bca1140a4824bfc96215c92498dd/dit4c-public-images/dit4c-helper-upload-webdav.linux.amd64.aci"
+  # Public container images (converted using docker2aci)
+  public=null
+  public {
+    openrefine {
+      display = "OpenRefine"
+      image = "https://openstack-swift-server.example:8888/v1/AUTH_baaf1c56475deb8506abd9325fb69a07/dit4c-public-images/dit4c-dit4c-container-openrefine-latest.aci"
+    }
+    jupyter {
+      display = "Jupyter with Python & R"
+      image = "https://openstack-swift-server.example:8888/v1/AUTH_baaf1c56475deb8506abd9325fb69a07/dit4c-public-images/dit4c-dit4c-container-jupyter-latest.aci"
+    }
+  }
+}
+# Google Analytics details
+tracking.ga {
+  id="UA-54000000-1"
+  errors=false
+}
+# Symmetric secret for encrypting cookies and portal-issued tokens
+play.crypto.secret=DIT4CextremelySecretSymmetricK3y
+# Reverse-proxy client info forwarding
+play.http.forwarded.version=rfc7239
+# Allow SSH server to be accessed outside container
+ssh.ip=0.0.0.0
+# Login page customization
+login {
+  # From https://www.flickr.com/photos/resbaz/24946337961/
+  background-image-url="https://farm2.staticflickr.com/1568/24946337961_4f91249161_k.jpg"
+  message.text="![ResBaz logo](https://avatars1.githubusercontent.com/u/6485902?v=3&s=200)"
+}
+# Public config available via /config.json
+public-config {
+  # Routing servers
+  router.ssh.servers = [
+    "bne.containers.dit4c.example:2222"
+    "mel.containers.dit4c.example:2222"
+  ]
+  storage.9pfs.servers = [
+    "45.110.234.34:2222"
+  ]
+}
+```
 
 ## DIT4C scheduler
 
