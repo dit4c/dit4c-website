@@ -31,6 +31,8 @@ When running the portal in production, you will need a TLS certificate, as HTTPS
 
 You will also need to run a DIT4C routing server. To use the recommended routing server with ([dit4c-routingserver-ssh][dit4c-routingserver-ssh]) you will require a wildcard certificate. Using HTTPS is **strongly** advised, and you can use a self-signed certificate for test environments if necessary.
 
+---
+
 ## Apache Cassandra
 
 ### In Development
@@ -50,6 +52,8 @@ You likely will want to run Cassandra with replication. While the portal is not 
 Cassandra authentication can be configured [as described in its manual](https://docs.datastax.com/en/cassandra/3.0/cassandra/configuration/secureConfigNativeAuth.html). The DIT4C portal and scheduler use [akka-persistence-cassandra](https://github.com/akka/akka-persistence-cassandra/), which provides [authentication configuration](https://github.com/akka/akka-persistence-cassandra/blob/v0.23/src/main/resources/reference.conf#L164).
 
 Examples of Cassandra backup scripts can be found in <https://github.com/dit4c/backup-scripts>.
+
+---
 
 ## DIT4C portal
 
@@ -194,6 +198,8 @@ public-config {
   ]
 }
 ```
+
+---
 
 ## DIT4C scheduler
 
@@ -505,7 +511,7 @@ import services._
 
 When the scheduler connects & sends its PGP public keys, the portal will match them to the provided fingerprint.
 
-#### Running the scheduler
+#### Running the scheduler during development
 
 To run the scheduler with a single cluster called "default":
 
@@ -540,6 +546,31 @@ clusters {
   }
 }
 ```
+
+#### Running the scheduler in production
+
+Like the portal, the scheduler is packaged in a container. It may be combined with Apache Cassandra into a single pod to provide a self-contained service.
+
+```
+rkt run \
+  --dns=8.8.8.8 \
+  --hostname=dit4c-scheduler \
+  --hosts-entry=127.0.0.1=dit4c-scheduler \
+  --volume cassandra-data,kind=host,source=/var/lib/cassandra \
+  --volume=scheduler-conf,kind=host,source=/etc/dit4c-scheduler,readOnly=true \
+  https://github.com/dit4c/dit4c/releases/download/v0.10.2/dit4c-scheduler.linux.amd64.aci \
+  --mount volume=scheduler-conf,target=/conf \
+  -- \
+  --keys /conf/scheduler_keys.asc \
+  --listener-image https://openstack-swift.example:8888/v1/AUTH_faa5bca1140a4824bfc96215c92498dd/dit4c-public-images/dit4c-helper-listener-ssh.linux.amd64.aci \
+  --auth-image https://openstack-swift.example:8888/v1/AUTH_faa5bca1140a4824bfc96215c92498dd/dit4c-public-images/dit4c-helper-auth-portal.linux.amd64.aci \
+  --portal-uri https://dit4c.example/messaging/scheduler \
+  --config /conf/scheduler.conf \
+  --- \
+  https://github.com/dit4c/container-cassandra-etcd/releases/download/0.1.0/cassandra-etcd.linux.amd64.aci \
+  --mount volume=cassandra-data,target=/var/lib/cassandra
+```
+
 
 #### Create cluster access pass
 
@@ -608,7 +639,9 @@ http://192.168.100.1:9000/share/clusters/34546BBDED7719C865C3C4E8210512A677C41E8
 
 You may wish to use a URL shortener for easier distribution, though consider the security implications before doing so.
 
-## CoreOS VM
+---
+
+## CoreOS VM compute node
 
 In theory, you could use any VM that has systemd and [rkt](https://coreos.com/rkt/). In practice, it's simpler to use CoreOS. In production, you're likely to use [cloud-config](https://coreos.com/os/docs/latest/cloud-config.html) or [Ignition](https://coreos.com/ignition/docs/latest/) to configure the reboot strategy, add SSH keys and mount storage, however the default config will work fine for development.
 
