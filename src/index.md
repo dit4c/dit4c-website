@@ -2,7 +2,7 @@
 layout: index.html
 ---
 
-<abbr title="Data Intensive Tools for the Cloud">DIT4C</abbr> _(dit-for-see)_ is a platform for hosting data analysis tools "in the cloud" using Docker containers. Docker images provide the tools, and DIT4C provides a secure hosting platform for them.
+<abbr title="Data Intensive Tools for the Cloud">DIT4C</abbr> _(dit-for-see)_ is a platform for hosting data analysis tools "in the cloud" using containers. Container images provide the tools, and DIT4C provides a secure hosting platform for them.
 
 [Learn more about how DIT4C was used for ResBaz 2015](resbaz.html)
 
@@ -20,14 +20,13 @@ As long as your users have Internet access and a modern browser, they'll be able
 
 DIT4C has plenty of images to choose from:
 
- * [IPython Notebook][dit4c-container-ipython]
+ * [Jupyter Python Notebook][dit4c-container-ipython]
  * [RStudio][dit4c-container-rstudio]
- * [Octave (GUI)][dit4c-container-octave]
- * [Octave & Julia (Jupyter)][dit4c-container-jupyter]
+ * [Jupyter + R][dit4c-container-jupyter]
  * [OpenRefine][dit4c-container-openrefine]
+ * [Apache Zeppelin][dit4c-container-zeppelin]
  * [Slicer][dit4c-container-slicer]
- * [Blender][dit4c-container-blender]
- * [Gephi][dit4c-container-gephi]
+ * [FSL][dit4c-container-fsl]
 
 If they're not an instant fit, that's OK. DIT4C can use any appropriate image from Docker Hub.
 
@@ -40,7 +39,7 @@ Extend one of the existing tool images.
 
 FROM dit4c/dit4c-container-ipython
 
-ADD sudo yum install -y awesome-package-we-forgot
+ADD apt-get install -y awesome-package-we-forgot
 
 ```
 
@@ -55,7 +54,7 @@ Extend one of the base images:
 
 ### Bring Your Own Compute
 
-To improve scalability and security, DIT4C runs all Docker containers on compute nodes separate from the portal.
+To improve scalability and security, DIT4C runs all containers on compute nodes separate from the portal.
 
 Compute nodes are spun up by their owners and registered with the portal. Compute node owners can then provide access tokens for others to use the node to run containers. Owners can stop or remove any container on their node via the portal, but not view their contents.
 
@@ -72,12 +71,12 @@ include release-signing-key.asc
 [Download release-signing-key.asc](./release-signing-key.asc)
 
 [dit4c-container-base]: https://hub.docker.com/r/dit4c/dit4c-container-base/
-[dit4c-container-blender]: https://hub.docker.com/r/dit4c/dit4c-container-blender/
 [dit4c-container-gephi]: https://hub.docker.com/r/dit4c/dit4c-container-gephi/
 [dit4c-container-ipython]: https://hub.docker.com/r/dit4c/dit4c-container-ipython/
 [dit4c-container-jupyter]: https://hub.docker.com/r/dit4c/dit4c-container-jupyter/
-[dit4c-container-octave]: https://hub.docker.com/r/dit4c/dit4c-container-octave/
+[dit4c-container-fsl]: https://hub.docker.com/r/dit4c/dit4c-container-fsl/
 [dit4c-container-openrefine]: https://hub.docker.com/r/dit4c/dit4c-container-openrefine/
 [dit4c-container-rstudio]: https://hub.docker.com/r/dit4c/dit4c-container-rstudio/
 [dit4c-container-slicer]: https://hub.docker.com/r/dit4c/dit4c-container-slicer/
 [dit4c-container-x11]: https://hub.docker.com/r/dit4c/dit4c-container-x11/
+[dit4c-container-zeppelin]: https://hub.docker.com/r/dit4c/dit4c-container-zeppelin/
