@@ -1,0 +1,44 @@
+digraph G {
+  rankdir=LR
+  "Client Browser" [shape=house]
+
+  subgraph cluster_0 {
+    label="Public"
+    "Portal"
+    "Routing Server"
+  }
+
+  subgraph cluster_1 {
+    label="Private"
+    "Scheduler"
+    "Compute Node"
+    { rank=sink "Scheduler" "Compute Node"}
+  }
+
+  "Client Browser" -> "Portal" [color=blue]
+  "Client Browser" -> "Routing Server" [color=blue]
+  "Compute Node" -> "Portal" [color=red]
+  "Compute Node" -> "Routing Server"
+  "Scheduler" -> "Portal" [color=red]
+  "Compute Node" -> "Scheduler" [dir=back]
+
+  "Portal" -> "Scheduler" [style=dashed,color=red]
+  "Routing Server" -> "Compute Node" [style=dashed,color=blue]
+  "Portal" -> "Compute Node" [style=invis]
+  "Routing Server" -> "Scheduler" [style=invis]
+
+  { rank = source;
+    legend [shape=none, margin=0, label=<
+    <TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4">
+     <TR>
+      <TD>Client Traffic</TD>
+      <TD BGCOLOR="BLUE"></TD>
+     </TR>
+     <TR>
+      <TD>Portal API Calls</TD>
+      <TD BGCOLOR="RED"></TD>
+     </TR>
+    </TABLE>
+   >];
+  }
+}
