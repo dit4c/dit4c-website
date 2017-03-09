@@ -9,5 +9,5 @@ permalink: false
 ## Overview
 
 ![](images/diagrams/high-level-arch-basic.dot.svg)
-![](images/diagrams/high-level-arch.dot.svg)
+![](images/diagrams/high-level-arch-extra.dot.svg)
 ![](images/diagrams/pod-components.dot.svg)

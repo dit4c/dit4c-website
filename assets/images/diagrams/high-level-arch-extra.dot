@@ -1,0 +1,12 @@
+digraph G {
+  rankdir=LR
+
+  "Compute Node" -> "Image Server"
+  "Compute Node" -> "Storage Server"
+  "Portal" -> "Image Server"
+  "Image Server" -> "Portal" [color=red]
+  "Storage Server" -> "Portal" [color=red]
+  "Compute Node" -> "Portal" [color=red]
+
+  { rank=source "Portal"}
+}
