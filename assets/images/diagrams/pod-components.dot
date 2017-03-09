@@ -1,0 +1,64 @@
+digraph G {
+  compound=true
+
+  "Client Browser" [shape=house]
+  { rank=source "Client Browser"}
+  "Client Browser" -> "Portal" [color=blue]
+  "Client Browser" -> "Routing Server" [color=blue]
+
+  subgraph cluster_node {
+    label="Compute Node"
+
+    subgraph cluster_instance_pod {
+      label="Container Pod"
+      "Listener Helper" ->
+      "Auth Helper" ->
+      "App" [color=blue]
+      "Storage Helper" -> "App" [style=dotted]
+    }
+
+    subgraph cluster_upload_pod {
+      label="Upload Pod"
+      "Upload Helper"
+    }
+
+    "Private Keys" [shape=note]
+    "Saved App Image" [shape=note]
+    { rank=same "Private Keys" "Saved App Image" }
+
+    "App" -> "Saved App Image" [style=dotted]
+
+    "Auth Helper" -> "Private Keys" [dir=back,style=dotted]
+    "Listener Helper" -> "Private Keys" [dir=back,style=dotted]
+    "Storage Helper" -> "Private Keys" [dir=back,style=dotted]
+    "Upload Helper" -> "Private Keys" [dir=back,style=dotted]
+    "Upload Helper" -> "Saved App Image" [dir=back,style=dotted]
+  }
+  "Routing Server" -> "Listener Helper" [style=dashed,color=blue]
+  "Routing Server" -> "Portal" [color=RED]
+  "Auth Helper" -> "Portal" [color=RED]
+  "Listener Helper" -> "Portal" [color=RED]
+  "Listener Helper" -> "Routing Server"
+  "Storage Helper" -> "Storage Server"
+  "Image Server" -> "Portal" [color=RED]
+  "Storage Server" -> "Portal" [color=RED]
+  "Upload Helper" -> "Portal" [color=RED]
+  "Image Server" -> "Upload Helper" [dir=back]
+
+  { rank=sink "Image Server" "Storage Server"}
+
+  { rank = sink;
+    legend [shape=none, margin=0, label=<
+    <TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4">
+     <TR>
+      <TD>Client Traffic</TD>
+      <TD BGCOLOR="BLUE"></TD>
+     </TR>
+     <TR>
+      <TD>Portal API Calls</TD>
+      <TD BGCOLOR="RED"></TD>
+     </TR>
+    </TABLE>
+   >];
+  }
+}

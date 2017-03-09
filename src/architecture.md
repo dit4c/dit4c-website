@@ -6,4 +6,7 @@ permalink: false
 
 # DIT4C Architecture
 
-_Details soon_
+## Overview
+
+![](images/diagrams/high-level-arch.dot.svg)
+![](images/diagrams/pod-components.dot.svg)
