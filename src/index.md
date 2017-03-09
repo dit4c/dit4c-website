@@ -52,14 +52,13 @@ Extend one of the base images:
 
 ---
 
-### Bring Your Own Compute
+### Architecture
 
 To improve scalability and security, DIT4C runs all containers on compute nodes separate from the portal.
 
-Compute nodes are spun up by their owners and registered with the portal. Compute node owners can then provide access tokens for others to use the node to run containers. Owners can stop or remove any container on their node via the portal, but not view their contents.
+A portal can have multiple schedulers, each able to start containers on compute nodes. Through the use of routing servers, DIT4C is able to allow compute nodes and schedulers to exist on private networks with no open inbound ports, providing better security for compute and data.
 
-From bare metal to cloud VMs, DIT4C allows compute to be provided in whatever way makes sense for the users. For the security-conscious, DIT4C can even use
-SSL for communication between the portal and individual compute nodes, providing end-to-end encryption.
+[Read about DIT4C's architecture in more detail](./architecture.html)
 
 ---
 
