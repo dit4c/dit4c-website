@@ -17,11 +17,11 @@ To run a minimal DIT4C environment for development, you need to run the followin
 * [a DIT4C scheduler](#dit4c-scheduler)
 * [a CoreOS VM to serve as a compute node](#coreos-vm-compute-node)
 
-You may optionally run:
+You may optionally run a:
 
-* a DIT4C image server ([dit4c-imageserver-filesystem][dit4c-imageserver-filesystem]/[dit4c-imageserver-swift][dit4c-imageserver-swift])
-* a DIT4C routing server ([dit4c-routingserver-ssh][dit4c-routingserver-ssh])
-* a DIT4C file server ([dit4c-fileserver-9pfs](https://github.com/dit4c/dit4c-fileserver-9pfs/))
+* [DIT4C image server](#dit4c-image-server) ([dit4c-imageserver-filesystem][dit4c-imageserver-filesystem]/[dit4c-imageserver-swift][dit4c-imageserver-swift])
+* [DIT4C routing server](#dit4c-routing-server) ([dit4c-routingserver-ssh][dit4c-routingserver-ssh])
+* [DIT4C storage server](#dit4c-storage-server) ([dit4c-fileserver-9pfs](https://github.com/dit4c/dit4c-fileserver-9pfs/))
 
 If you do not wish to save instances, you do not need to deploy an image server. By using a helper that utilizes [ngrok](https://ngrok.com/), you do not need to run a routing server in development. However, you should avoid using ngrok for the traffic demands of a production service.
 
@@ -766,7 +766,75 @@ You should ensure `image.server` is set, either with:
  * the run option `-Dimage.server="https://images.dit4c.example"`, or
  * in `prod.conf`.
 
+When running in a development environment, keep in mind that the portal and all compute nodes must be able to contact the image server directly.
 
+---
+
+## DIT4C routing server
+
+See [dit4c-routingserver-ssh][dit4c-routingserver-ssh] for details on running a routing server.
+
+The matching pod helper, [dit4c-helper-listener-ssh][dit4c-helper-listener-ssh], requires configuration to be supplied via `/config.json` from the portal. This can be supplied as in the portal configuration:
+
+```
+public-config {
+  # Routing servers
+  router.ssh.servers = [
+    "bne.containers.dit4c.example:2222"
+    "mel.containers.dit4c.example:2222"
+  ]
+```
+
+To use the routing servers, specify a routing helper for schedulers using the `--listener-image` scheduler flag.
+
+When running in a development environment, keep in mind that all compute nodes must be able to contact the routing server directly.
+
+---
+
+## DIT4C storage server
+
+### Security implications
+
+Mounting file storage requires the scheduler to disable at runtime some security features of [rkt][rkt] (`--insecure-options=seccomp,paths`). It is **highly** recommended that you use a specially-compiled version of [rkt][rkt] that uses the KVM/QEMU stage 1 by default, so each container is run in its own hypervisor.
+
+ie.
+```
+git clone https://github.com/coreos/rkt.git
+cd rkt
+./autogen.sh
+./configure \
+  --with-stage1-flavors=kvm
+  --with-stage1-default-flavor=kvm
+  --with-stage1-kvm-hypervisors=qemu
+make
+```
+
+
+### Running
+
+The only shared file storage server, [dit4c-fileserver-9pfs][dit4c-fileserver-9pfs], has quite poor IO performance due to the way the [9P filesystem](http://9p.cat-v.org/) is affected by latency. It was implemented primarily as a proof-of-concept, as it's simpler than an implementation based on NTP, CIFS or SFTP.
+
+See [dit4c-fileserver-9pfs][dit4c-fileserver-9pfs] for details on running a storage server.
+
+The matching pod helper, [dit4c-helper-storage-9pfs][dit4c-helper-storage-9pfs], requires configuration to be supplied via `/config.json` from the portal. This can be supplied as in the portal configuration:
+
+```
+public-config {
+  # Storage servers
+  storage.9pfs.servers = [
+    "45.110.234.34:2222"
+  ]
+}
+```
+
+To use the storage servers, specify a storage helper for schedulers using the `--storage-image` scheduler flag. Some security features  of rkt are disabled in order to mount storage.
+
+When running in a development environment, keep in mind that all compute nodes must be able to contact the storage server directly.
+
+[rkt]: https://github.com/coreos/rkt
+[dit4c-fileserver-9pfs]: https://github.com/dit4c/dit4c-fileserver-9pfs
+[dit4c-helper-listener-ssh]: https://github.com/dit4c/dit4c-helper-listener-ssh
+[dit4c-helper-storage-9pfs]: https://github.com/dit4c/dit4c-helper-storage-9pfs
 [dit4c-imageserver-filesystem]: https://github.com/dit4c/dit4c-imageserver-filesystem
 [dit4c-imageserver-swift]: https://github.com/dit4c/dit4c-imageserver-swift
 [dit4c-routingserver-ssh]: https://github.com/dit4c/dit4c-routingserver-ssh/
