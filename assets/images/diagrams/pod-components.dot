@@ -47,9 +47,9 @@ digraph G {
 
   { rank=sink "Image Server" "Storage Server"}
 
-  { rank = sink;
+  { rank = source;
     legend [shape=none, margin=0, label=<
-    <TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4">
+    <TABLE BORDER="0" CELLBORDER="0" CELLSPACING="2" CELLPADDING="4">
      <TR>
       <TD>Client Traffic</TD>
       <TD BGCOLOR="BLUE"></TD>
@@ -57,6 +57,14 @@ digraph G {
      <TR>
       <TD>Portal API Calls</TD>
       <TD BGCOLOR="RED"></TD>
+     </TR>
+     <TR>
+      <TD>Tunneled Traffic</TD>
+      <TD>– – –</TD>
+     </TR>
+     <TR>
+      <TD>Filesystem Mounts</TD>
+      <TD>· · · ·</TD>
      </TR>
     </TABLE>
    >];
