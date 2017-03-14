@@ -1,0 +1,22 @@
+{
+  "name": "dit4c-website",
+  "description": "",
+  "main": "",
+  "authors": [
+    "Tim Dettrick <t.dettrick@uq.edu.au>"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/dit4c/dit4c-website",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "font-awesome": "4.2.0"
+  }
+}

@@ -1,3 +1,4 @@
 /build/
 /node_modules/
 /layouts/page/index.html
+/bower_components/
