@@ -1,22 +1,27 @@
 #!/usr/bin/env node
 
 var common = require('./common'),
-    serve = require('metalsmith-serve'),
-    watch = require('metalsmith-watch');
+    nodeStatic = require('node-static'),
+    watch = require('glob-watcher');
 
-// Fix build function so it runs without parameters
-common
-  .use(serve({
-    port: 1313,
-    verbose: true
-  }))
-  .use(watch({
-    paths: {
-      "${source}/**/*": true,
-      "assets/**/*": true,
-      "layouts/**/*": true,
-    }
-  }))
-  .build(function(err) {
-    if (err) { throw err; }
-  });
+function build(done) {
+  console.log("Rebuilding...")
+  common
+    .build(function(err) {
+      if (err) { throw err; }
+      console.log("Rebuilt.");
+    });
+  done();
+}
+
+var serve = new nodeStatic.Server('build');
+require('http').createServer((req, res) => {
+  req.addListener('end', () => serve.serve(req, res));
+  req.resume();
+}).listen(1313);
+
+watch([
+  "src/**/*",
+  "assets/**/*",
+  "layouts/**/*"
+], { ignoreInitial: false }, build);

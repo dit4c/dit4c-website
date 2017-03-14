@@ -3,6 +3,7 @@
   "private": true,
   "dependencies": {
     "bower": "^1.8.0",
+    "glob-watcher": "^3.1.0",
     "hogan.js": "^3.0.2",
     "lodash": "^4.17.4",
     "metalsmith": "^1.0.1",
@@ -12,9 +13,8 @@
     "metalsmith-less": "^1.0.1",
     "metalsmith-markdown": "^0.2.1",
     "metalsmith-permalinks": "^0.4.0",
-    "metalsmith-serve": "0.0.7",
-    "metalsmith-watch": "^1.0.3",
     "metalsmith-word-count": "0.0.4",
+    "node-static": "^0.7.9",
     "q": "^1.4.1",
     "text-table": "^0.2.0"
   },
