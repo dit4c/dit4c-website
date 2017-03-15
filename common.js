@@ -4,7 +4,6 @@ var Metalsmith = require('metalsmith'),
     Q = require('q'),
     assets = require('metalsmith-assets'),
     bower = require('bower'),
-    include = require('metalsmith-include-content'),
     layouts = require('metalsmith-layouts'),
     markdown = require('metalsmith-markdown'),
     permalinks = require('metalsmith-permalinks'),
@@ -49,7 +48,6 @@ module.exports =
     .frontmatter(true)
     .metadata(metadata)
     .clean(true)
-    .use(include())
     .use(markdown())
     .use(layouts({
       "engine": "hogan",

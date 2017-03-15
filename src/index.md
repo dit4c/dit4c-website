@@ -68,9 +68,6 @@ Let's [get started](./running.html)...
 
 ### Release Signing Key
 
-```
-include release-signing-key.asc
-```
 [Download release-signing-key.asc](./release-signing-key.asc)
 
 [dit4c-container-base]: https://hub.docker.com/r/dit4c/dit4c-container-base/
