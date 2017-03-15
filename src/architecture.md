@@ -65,7 +65,7 @@ The storage helper mounts remote user storage and exposes it to the app instance
 
 ### Upload Helper
 
-The upload helper sends the saved app instance image to the image server. The scheduler provides a image server base URL which includes authentication details, and the image server authenticates connections by passing request headers to portal. Once complete, the upload helper is responsible for notifying the image server of the new image URL.
+The upload helper sends the saved app instance image to the image server. The scheduler provides a image server base URL which includes authentication details, and the image server authenticates connections by passing request headers to portal. Once complete, the upload helper is responsible for notifying the portal of the new image URL.
 
 ![](images/diagrams/helper-upload.dot.svg)
 
