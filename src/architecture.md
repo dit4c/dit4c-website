@@ -53,7 +53,7 @@ The listener helper is responsible for exposing the app to the rest of the world
 
 ### Auth Helper
 
-The listener helper is responsible for ensuring that traffic to the app is from an authorized source. It connects to the DIT4C portal and carries out OAuth 2 authentication of the user. Once authentication is confirmed, it provides the client with a session cookie and forwards all traffic associated with that session to the app instance.
+The auth helper is responsible for ensuring that traffic to the app is from an authorized source. It connects to the DIT4C portal and carries out OAuth 2 authentication of the user. Once authentication is confirmed, the auth helper provides the client with a session cookie and forwards all traffic associated with that session to the app instance.
 
 ![](images/diagrams/helper-auth.dot.svg)
 
@@ -65,7 +65,7 @@ The storage helper mounts remote user storage and exposes it to the app instance
 
 ### Upload Helper
 
-The upload helper sends the saved app instance image to the image server. The scheduler provides a target URL which includes authentication details, and the image server authenticates connections by passing request headers to portal.
+The upload helper sends the saved app instance image to the image server. The scheduler provides a image server base URL which includes authentication details, and the image server authenticates connections by passing request headers to portal. Once complete, the upload helper is responsible for notifying the image server of the new image URL.
 
 ![](images/diagrams/helper-upload.dot.svg)
 
