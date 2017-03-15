@@ -45,6 +45,30 @@ Each container instance runs in a pod with a number of helper containers. This a
 
 ![](images/diagrams/pod-components.dot.svg)
 
+### Listener Helper
+
+The listener helper is responsible for exposing the app to the rest of the world. It connects to an external public routing server and forwards all incoming traffic to the app instance via the auth helper. Once connected, the listener is responsible for informing the portal of its public URL.
+
+![](images/diagrams/helper-listener.dot.svg)
+
+### Auth Helper
+
+The listener helper is responsible for ensuring that traffic to the app is from an authorized source. It connects to the DIT4C portal and carries out OAuth 2 authentication of the user. Once authentication is confirmed, it provides the client with a session cookie and forwards all traffic associated with that session to the app instance.
+
+![](images/diagrams/helper-auth.dot.svg)
+
+### Storage Helper
+
+The storage helper mounts remote user storage and exposes it to the app instance. The file server is responsible for authenticating the storage helper connection by looking up the published instance public keys from the portal.
+
+![](images/diagrams/helper-storage.dot.svg)
+
+### Upload Helper
+
+The upload helper sends the saved app instance image to the image server. The scheduler provides a target URL which includes authentication details, and the image server authenticates connections by passing request headers to portal.
+
+![](images/diagrams/helper-upload.dot.svg)
+
 ## Further Detail
 
 See "[installation guide](./running.html)" for further details on how the components fit together.

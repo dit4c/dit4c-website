@@ -1,0 +1,31 @@
+digraph G {
+  rankdir=LR
+  compound=true
+
+  "Upload Helper" [style=filled,fillcolor=black fontcolor=white]
+  "Private Keys" [shape=note]
+  "Saved Image" [shape=note]
+  "Private Keys" -> "Upload Helper" [style=dotted]
+  "Saved Image" -> "Upload Helper" [style=dotted]
+
+  "Image Server" -> "Upload Helper" [dir=back]
+  "Upload Helper" -> "Portal" [color=red]
+  "Image Server" -> "Portal" [color=red]
+
+  { rank=same "Upload Helper" "Image Server"}
+
+  {
+    legend [shape=none, margin=0, label=<
+    <TABLE BORDER="0" CELLBORDER="0" CELLSPACING="2" CELLPADDING="4">
+     <TR>
+      <TD>Portal API Calls</TD>
+      <TD BGCOLOR="RED"></TD>
+     </TR>
+     <TR>
+      <TD>Filesystem Mounts</TD>
+      <TD>· · · ·</TD>
+     </TR>
+    </TABLE>
+   >];
+  }
+}

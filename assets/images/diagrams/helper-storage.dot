@@ -1,0 +1,30 @@
+digraph G {
+  rankdir=LR
+  compound=true
+
+  "Storage Helper" [style=filled,fillcolor=black fontcolor=white]
+  "Private Keys" [shape=note]
+  "Private Keys" -> "Storage Helper" [style=dotted]
+
+  "Storage Helper" -> "File Server"
+  "File Server" -> "Portal" [color=red]
+  "Storage Helper" -> "App" [style=dotted]
+
+  { rank=source "Storage Helper" "Private Keys"}
+  { rank=sink "Portal" "App"}
+
+  {
+    legend [shape=none, margin=0, label=<
+    <TABLE BORDER="0" CELLBORDER="0" CELLSPACING="2" CELLPADDING="4">
+     <TR>
+      <TD>Portal API Calls</TD>
+      <TD BGCOLOR="RED"></TD>
+     </TR>
+     <TR>
+      <TD>Filesystem Mounts</TD>
+      <TD>· · · ·</TD>
+     </TR>
+    </TABLE>
+   >];
+  }
+}

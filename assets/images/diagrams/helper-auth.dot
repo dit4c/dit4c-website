@@ -1,0 +1,55 @@
+digraph G {
+  rankdir=LR
+  compound=true
+
+  "Client\nBrowser" [shape=house]
+  "GitHub" [shape=rectangle]
+  "Auth\nHelper" [style=filled,fillcolor=black fontcolor=white]
+  "Portal" -> "Auth\nHelper" [dir=back,color=red]
+  "Client\nBrowser" -> "Portal" [color=blue]
+
+  "Private\nKeys" [shape=note]
+  "Auth\nHelper" -> "Private\nKeys" [dir=back,style=dotted]
+  "GitHub\nAPI Key" [shape=note]
+  "Portal" -> "GitHub\nAPI Key" [dir=back,style=dotted]
+
+  "Client\nBrowser" -> "Routing\nServer" [color=blue]
+  "Client\nBrowser" -> "GitHub" [color=blue]
+  "Listener\nHelper" -> "Auth\nHelper" [color=blue]
+  "Auth\nHelper" -> "App" [color=blue]
+
+  "Routing\nServer" -> "Listener\nHelper" [style=dashed,color=blue]
+  "Listener\nHelper" -> "Routing\nServer"
+
+
+  "GitHub" -> "Portal" [dir=back,color=red]
+
+  { rank=source "Client\nBrowser"}
+
+  { rank=same "Portal" "Auth\nHelper" "GitHub"}
+
+  { rank=sink "App"}
+
+  { rank = sink;
+    legend [shape=none, margin=0, label=<
+    <TABLE BORDER="0" CELLBORDER="0" CELLSPACING="2" CELLPADDING="4">
+     <TR>
+      <TD>Client Traffic</TD>
+      <TD BGCOLOR="BLUE"></TD>
+     </TR>
+     <TR>
+      <TD>API Calls</TD>
+      <TD BGCOLOR="RED"></TD>
+     </TR>
+     <TR>
+      <TD>Tunneled Traffic</TD>
+      <TD>– – –</TD>
+     </TR>
+     <TR>
+      <TD>Filesystem Mounts</TD>
+      <TD>· · · ·</TD>
+     </TR>
+    </TABLE>
+   >];
+  }
+}

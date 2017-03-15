@@ -1,0 +1,44 @@
+digraph G {
+  rankdir=LR
+  compound=true
+
+  "Client\nBrowser" [shape=house]
+  "Listener\nHelper" [style=filled,fillcolor=black fontcolor=white]
+  "Portal" -> "Listener\nHelper" [dir=back,color=RED]
+  "Client\nBrowser" -> "Routing\nServer" [color=blue]
+  "Listener\nHelper" -> "Auth\nHelper" [color=blue]
+  "Auth\nHelper" -> "App" [color=blue]
+
+  "Routing\nServer" -> "Listener\nHelper" [style=dashed,color=blue]
+  "Listener\nHelper" -> "Routing\nServer"
+
+  "Private\nKeys" [shape=note]
+  "Listener\nHelper" -> "Private\nKeys" [dir=back,style=dotted]
+
+  { rank=same "Portal" "Listener\nHelper" "Private\nKeys"}
+
+  { rank=sink "App"}
+
+  { rank = source;
+    legend [shape=none, margin=0, label=<
+    <TABLE BORDER="0" CELLBORDER="0" CELLSPACING="2" CELLPADDING="4">
+     <TR>
+      <TD>Client Traffic</TD>
+      <TD BGCOLOR="BLUE"></TD>
+     </TR>
+     <TR>
+      <TD>Portal API Calls</TD>
+      <TD BGCOLOR="RED"></TD>
+     </TR>
+     <TR>
+      <TD>Tunneled Traffic</TD>
+      <TD>– – –</TD>
+     </TR>
+     <TR>
+      <TD>Filesystem Mounts</TD>
+      <TD>· · · ·</TD>
+     </TR>
+    </TABLE>
+   >];
+  }
+}
