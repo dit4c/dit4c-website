@@ -6,7 +6,6 @@ var Metalsmith = require('metalsmith'),
     bower = require('bower'),
     include = require('metalsmith-include-content'),
     layouts = require('metalsmith-layouts'),
-    less = require('metalsmith-less'),
     markdown = require('metalsmith-markdown'),
     permalinks = require('metalsmith-permalinks'),
     wordcount = require('metalsmith-word-count');
@@ -51,7 +50,6 @@ module.exports =
     .metadata(metadata)
     .clean(true)
     .use(include())
-    .use(less())
     .use(markdown())
     .use(layouts({
       "engine": "hogan",

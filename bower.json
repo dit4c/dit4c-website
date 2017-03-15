@@ -16,7 +16,7 @@
     "tests"
   ],
   "dependencies": {
-    "bootstrap": "^3.3.7",
-    "font-awesome": "4.2.0"
+    "polymer": "~2.0.0-rc.2",
+    "paper-styles": "2.0-preview"
   }
 }
