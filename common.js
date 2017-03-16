@@ -6,6 +6,7 @@ var Metalsmith = require('metalsmith'),
     bower = require('bower'),
     layouts = require('metalsmith-layouts'),
     markdown = require('metalsmith-markdown'),
+    moment = require('moment'),
     permalinks = require('metalsmith-permalinks'),
     wordcount = require('metalsmith-word-count');
 
@@ -41,7 +42,15 @@ var bowerPlugin = function (files, metalsmith, done) {
           }, Q('')).done(function() { done(); });
         });
     });
-}
+};
+
+var timestamp = function (files, metalsmith, done) {
+  for (var f in files) {
+    var data = files[f];
+    data['timestamp'] = moment.utc(data.stats.mtime).format();
+  }
+  done();
+};
 
 module.exports =
   Metalsmith(__dirname)
@@ -49,10 +58,12 @@ module.exports =
     .metadata(metadata)
     .clean(true)
     .use(markdown())
+    .use(timestamp)
     .use(layouts({
       "engine": "hogan",
       "rename": true
     }))
+    .use(wordcount())
     .use(permalinks({
       "pattern": ":title"
     }))
@@ -60,5 +71,4 @@ module.exports =
       source: './assets',
       destination: '.'
     }))
-    .use(bowerPlugin)
-    .use(wordcount());
+    .use(bowerPlugin);

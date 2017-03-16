@@ -12,6 +12,7 @@
     "metalsmith-markdown": "^0.2.1",
     "metalsmith-permalinks": "^0.4.0",
     "metalsmith-word-count": "0.0.4",
+    "moment": "^2.17.1",
     "node-static": "^0.7.9",
     "q": "^1.4.1",
     "text-table": "^0.2.0"
