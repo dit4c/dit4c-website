@@ -4,13 +4,14 @@ layout: index.html
 
 <abbr title="Data Intensive Tools for the Cloud">DIT4C</abbr> _(dit-for-see)_ is a platform for hosting data analysis tools "in the cloud" using containers. Container images provide the tools, and DIT4C provides a secure hosting platform for them.
 
----
+As long as users have Internet access and a modern browser, they'll be able to get to their tools from wherever they are, while allowing resource administrators to provision that compute wherever makes the most sense (eg. self-host, IaaS, etc).
 
-### Host locally, use globally
+### Why?
 
-DIT4C isn't a hosted service. You can run it anywhere you want.
+DIT4C is focused on meeting two needs:
 
-As long as your users have Internet access and a modern browser, they'll be able to get to their tools from wherever they are.
+ * Training sessions - having a working install right from the beginning means training participants start programming sooner, and do so in a consistent environment.
+ * Reproducible research - container sharing and export allows complete working environments to be exchanged and archived.
 
 ---
 
