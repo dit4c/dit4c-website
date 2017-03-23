@@ -1,0 +1,55 @@
+digraph G {
+
+  subgraph cluster_alice {
+    label="Alice"
+
+    public [label="Public\nImage",shape=rect]
+    a1 [label="a₁"]
+    a2 [label="a₂"]
+    a3 [label="a₃"]
+
+    { rank=source  }
+
+    public -> a1 -> a2 -> a3
+  }
+
+  subgraph cluster_bob {
+    label="Bob"
+
+    b1 [label="b₁"]
+    b2 [label="b₂",style=dashed]
+    b3 [label="b₃"]
+
+    a1 -> b1 [color=red]
+    b1 -> b2
+    b1 -> b3
+  }
+
+  a3_exported [label="a₃ image", shape=note]
+  a3 -> a3_exported [color=blue]
+  b3_exported [label="b₃ image", shape=note]
+  b3 -> b3_exported [color=blue]
+
+  { rank = source;
+    legend [shape=none, margin=0, label=<
+    <TABLE BORDER="0" CELLBORDER="0" CELLSPACING="2" CELLPADDING="4">
+     <TR>
+      <TD>Exported</TD>
+      <TD BGCOLOR="BLUE"></TD>
+     </TR>
+     <TR>
+      <TD>Shared</TD>
+      <TD BGCOLOR="RED"></TD>
+     </TR>
+     <TR>
+      <TD>Persisted Instance</TD>
+      <TD>––––</TD>
+     </TR>
+     <TR>
+      <TD>Discarded Instance</TD>
+      <TD>– – –</TD>
+     </TR>
+    </TABLE>
+   >];
+  }
+}

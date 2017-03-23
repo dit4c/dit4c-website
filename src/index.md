@@ -6,7 +6,7 @@ layout: index.html
 
 ---
 
-### Host locally, run globally
+### Host locally, use globally
 
 DIT4C isn't a hosted service. You can run it anywhere you want.
 
@@ -26,7 +26,7 @@ DIT4C has plenty of images to choose from:
  * [Slicer][dit4c-container-slicer]
  * [FSL][dit4c-container-fsl]
 
-If they're not an instant fit, that's OK. DIT4C can use any appropriate image from Docker Hub.
+If they're not an instant fit, that's OK. DIT4C can use any container image that exposes its functionality via HTTP (80/tcp or 8080/tcp).
 
 #### Want a package installed for all new containers?
 
@@ -47,6 +47,18 @@ Extend one of the base images:
 
  * [Base][dit4c-container-base]
  * [X11 Desktop][dit4c-container-x11]
+
+---
+
+### Workflow
+
+DIT4C container instances provide access to research tools, which can be stopped and saved to image to persist their state. This allows continued work using different compute nodes and/or clusters. Persisted instances can also be shared with other users.
+
+![](images/diagrams/workflows.dot.svg)
+
+In this example, Alice saves a<sub>1</sub> and shares it with Bob. Bob then creates b<sub>1</sub> to continue working. Bob saves b<sub>1</sub> and continues work in b<sub>2</sub>, but doesn't like how things have turned out. He discards b<sub>2</sub> and begins work from b<sub>1</sub> again with b<sub>3</sub>.
+
+Both Alice and Bob finish their work, and export their environment so others can reproduce their analysis in future.
 
 ---
 
