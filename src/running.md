@@ -162,10 +162,12 @@ images {
     openrefine {
       display = "OpenRefine"
       image = "https://openstack-swift-server.example:8888/v1/AUTH_baaf1c56475deb8506abd9325fb69a07/dit4c-public-images/dit4c-dit4c-container-openrefine-latest.aci"
+      tags = ["OpenRefine"]
     }
     jupyter {
       display = "Jupyter with Python & R"
       image = "https://openstack-swift-server.example:8888/v1/AUTH_baaf1c56475deb8506abd9325fb69a07/dit4c-public-images/dit4c-dit4c-container-jupyter-latest.aci"
+      tags = ["Python", "R"]
     }
   }
 }
