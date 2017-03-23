@@ -154,8 +154,6 @@ silhouette {
 images {
   # DIT4C image server for saving images
   server="https://images.dit4c.example"
-  # Helper ACI for uploading images
-  saveHelper="https://openstack-swift-server.example:8888/v1/AUTH_faa5bca1140a4824bfc96215c92498dd/dit4c-public-images/dit4c-helper-upload-webdav.linux.amd64.aci"
   # Public container images (converted using docker2aci)
   public=null
   public {
