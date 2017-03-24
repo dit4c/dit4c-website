@@ -63,6 +63,18 @@ Both Alice and Bob finish their work, and export their environment so others can
 
 ---
 
+### Screenshots
+
+![Portal Instances](/images/screenshots/portal_instances.png)
+
+![Instance Landing Page](/images/screenshots/instance_landing_page.png)
+
+![Instance RStudio](/images/screenshots/instance_rstudio.png)
+
+![Instance Terminal](/images/screenshots/instance_terminal.png)
+
+---
+
 ### Architecture
 
 To improve scalability and security, DIT4C runs all containers on compute nodes separate from the portal.
